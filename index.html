@@ -1,1616 +1,187 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Cartagena 2027 · Agencia de viajes futurista</title>
-  <style>
-    /* ===== RESET & BASE ===== */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg: #0a0e17;
-      --surface: #121826;
-      --surface2: #1a2332;
-      --glass: rgba(255, 255, 255, 0.06);
-      --glass-border: rgba(255, 255, 255, 0.12);
-      --text: #e8edf5;
-      --text-dim: #8899b0;
-      --accent: #00e5ff;
-      --accent2: #7c3aed;
-      --accent3: #f472b6;
-      --ok: #34d399;
-      --warn: #fbbf24;
-      --danger: #f87171;
-      --radius: 20px;
-      --radius-sm: 12px;
-      --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
-      --glow: 0 0 24px rgba(0, 229, 255, 0.25);
-      --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 80px;
-    }
-
-    body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      padding-top: var(--safe-top);
-      padding-bottom: var(--safe-bottom);
-    }
-
-    /* ===== FONDO FUTURISTA ===== */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      background:
-        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0, 229, 255, 0.08), transparent),
-        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(124, 58, 237, 0.08), transparent),
-        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(244, 114, 182, 0.04), transparent);
-      pointer-events: none;
-    }
-
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 30%, transparent 80%);
-      pointer-events: none;
-    }
-
-    /* ===== HERO ===== */
-    .hero {
-      position: relative;
-      text-align: center;
-      padding: calc(48px + var(--safe-top)) 20px 40px;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: 50%;
-      translate: -50% 0;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(0, 229, 255, 0.15), transparent 70%);
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 6vw, 3.2rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      position: relative;
-      z-index: 1;
-      animation: gradientShift 6s ease infinite;
-      background-size: 200% 200%;
-    }
-
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    .hero .sub {
-      font-size: clamp(0.85rem, 2.5vw, 1.05rem);
-      color: var(--text-dim);
-      margin-top: 8px;
-      position: relative;
-      z-index: 1;
-      letter-spacing: 0.02em;
-    }
-
-    .hero .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 16px;
-      padding: 6px 18px;
-      border-radius: 99px;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      font-size: 0.8rem;
-      color: var(--accent);
-      backdrop-filter: blur(12px);
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero .badge::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.5); }
-      50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(0, 229, 255, 0); }
-    }
-
-    /* ===== NAV ===== */
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding: 10px 16px;
-      background: rgba(10, 14, 23, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--glass-border);
-      scrollbar-width: none;
-    }
-
-    nav::-webkit-scrollbar { display: none; }
-
-    nav a {
-      white-space: nowrap;
-      text-decoration: none;
-      color: var(--text-dim);
-      padding: 8px 18px;
-      border-radius: 99px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      border: 1px solid transparent;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      letter-spacing: 0.02em;
-    }
-
-    nav a:hover,
-    nav a.active {
-      color: var(--accent);
-      background: rgba(0, 229, 255, 0.08);
-      border-color: rgba(0, 229, 255, 0.25);
-    }
-
-    /* ===== MAIN ===== */
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 20px 16px 80px;
-    }
-
-    section {
-      margin: 48px 0;
-      animation: fadeUp 0.6s ease both;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h2 {
-      font-size: clamp(1.3rem, 3.5vw, 1.7rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    h2 .icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(124, 58, 237, 0.15));
-      border: 1px solid var(--glass-border);
-      font-size: 1.2rem;
-    }
-
-    h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin: 16px 0 8px;
-      color: var(--accent);
-      letter-spacing: 0.02em;
-    }
-
-    /* ===== CARDS ===== */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin: 12px 0;
-      backdrop-filter: blur(12px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card:hover {
-      border-color: rgba(0, 229, 255, 0.2);
-      box-shadow: var(--glow);
-      transform: translateY(-2px);
-    }
-
-    .card-glass {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin: 12px 0;
-      backdrop-filter: blur(20px);
-    }
-
-    /* ===== GRIDS ===== */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    @media (max-width: 700px) {
-      .grid-2, .grid-3 { grid-template-columns: 1fr; }
-    }
-
-    /* ===== STATS ===== */
-    .stat {
-      background: var(--surface);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius-sm);
-      padding: 16px;
-      text-align: center;
-      transition: all 0.3s;
-    }
-
-    .stat:hover {
-      border-color: rgba(0, 229, 255, 0.3);
-      box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
-    }
-
-    .stat small {
-      display: block;
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 4px;
-    }
-
-    .stat b {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--accent);
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* ===== FLIGHT TICKETS ===== */
-    .ticket {
-      background: var(--surface);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius);
-      padding: 18px;
-      margin: 12px 0;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s;
-    }
-
-    .ticket::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: linear-gradient(180deg, var(--accent), var(--accent2));
-    }
-
-    .ticket:hover {
-      border-color: rgba(0, 229, 255, 0.25);
-      box-shadow: var(--glow);
-    }
-
-    .ticket .route {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 12px;
-      align-items: center;
-      margin-top: 8px;
-    }
-
-    .ticket .route > div:last-child { text-align: right; }
-
-    .ticket .route b {
-      font-size: 1.6rem;
-      font-weight: 700;
-      display: block;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-    }
-
-    .ticket .route small {
-      display: block;
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      margin-top: 2px;
-    }
-
-    .ticket .arrow {
-      text-align: center;
-      color: var(--accent);
-      font-size: 1.4rem;
-      position: relative;
-    }
-
-    .ticket .arrow small {
-      display: block;
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      margin-top: 2px;
-      white-space: nowrap;
-    }
-
-    .ticket .tp {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 600;
-    }
-
-    .ticket.pending { border-left-color: var(--warn); }
-    .ticket.pending::before { background: linear-gradient(180deg, var(--warn), var(--accent3)); }
-
-    /* ===== CHECK MESSAGES ===== */
-    .check {
-      padding: 10px 16px;
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-      margin: 6px 0;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      line-height: 1.5;
-      border: 1px solid transparent;
-    }
-
-    .check.ok {
-      background: rgba(52, 211, 153, 0.08);
-      border-color: rgba(52, 211, 153, 0.2);
-      color: var(--ok);
-    }
-
-    .check.warn {
-      background: rgba(251, 191, 36, 0.08);
-      border-color: rgba(251, 191, 36, 0.2);
-      color: var(--warn);
-    }
-
-    .check.danger {
-      background: rgba(248, 113, 113, 0.08);
-      border-color: rgba(248, 113, 113, 0.2);
-      color: var(--danger);
-    }
-
-    .check .check-icon { flex-shrink: 0; font-size: 1rem; }
-
-    /* ===== CONTROLS ===== */
-    button, select, input {
-      font: inherit;
-      color: var(--text);
-      outline: none;
-    }
-
-    button {
-      cursor: pointer;
-      border: 1px solid var(--glass-border);
-      background: var(--surface2);
-      border-radius: var(--radius-sm);
-      padding: 10px 20px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      transition: all 0.25s;
-      letter-spacing: 0.02em;
-    }
-
-    button:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 0 16px rgba(0, 229, 255, 0.15);
-    }
-
-    button.primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border: none;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    button.primary:hover {
-      box-shadow: 0 0 28px rgba(0, 229, 255, 0.35);
-      transform: translateY(-1px);
-    }
-
-    select, input[type="number"], input[type="time"] {
-      padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--glass-border);
-      background: var(--surface2);
-      font-size: 0.85rem;
-      transition: border-color 0.25s;
-    }
-
-    select:focus, input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
-    }
-
-    input[type="number"] { width: 90px; }
-    input[type="time"] { width: 110px; }
-
-    /* ===== RANGE ===== */
-    input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      height: 6px;
-      border-radius: 99px;
-      background: var(--surface2);
-      border: none;
-      outline: none;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      cursor: pointer;
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
-      border: 2px solid #fff;
-      transition: transform 0.2s;
-    }
-
-    input[type="range"]::-webkit-slider-thumb:hover {
-      transform: scale(1.15);
-    }
-
-    /* ===== DETAILS ===== */
-    details {
-      margin: 8px 0;
-    }
-
-    summary {
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      padding: 10px 0;
-      color: var(--accent);
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: color 0.2s;
-    }
-
-    summary::-webkit-details-marker { display: none; }
-    summary::before {
-      content: '▸';
-      transition: transform 0.25s;
-      font-size: 0.8rem;
-    }
-    details[open] summary::before { transform: rotate(90deg); }
-
-    /* ===== FIELD ROWS ===== */
-    .field {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 0;
-      border-top: 1px dashed rgba(255, 255, 255, 0.06);
-      font-size: 0.85rem;
-    }
-
-    .field:first-of-type { border-top: none; }
-
-    .field label {
-      color: var(--text-dim);
-      flex: 1;
-    }
-
-    /* ===== MAP ===== */
-    #map {
-      width: 100%;
-      max-height: 480px;
-      background: #0d1420;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--glass-border);
-    }
-
-    #map path, #map circle, #map text {
-      transition: all 0.3s;
-    }
-
-    /* ===== TIMELINE / GANTT ===== */
-    .gantt {
-      position: relative;
-      height: 32px;
-      background: var(--surface2);
-      border-radius: 8px;
-      overflow: hidden;
-      margin: 6px 0 12px;
-      border: 1px solid var(--glass-border);
-    }
-
-    .gantt i {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      font: normal 0.68rem/32px var(--font);
-      text-align: center;
-      overflow: hidden;
-      white-space: nowrap;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      letter-spacing: 0.03em;
-      transition: filter 0.2s;
-    }
-
-    .gantt i:hover { filter: brightness(1.3); }
-
-    .date-labels {
-      position: relative;
-      height: 20px;
-      font-size: 0.72rem;
-      color: var(--text-dim);
-    }
-
-    .date-labels span {
-      position: absolute;
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
-      padding-left: 4px;
-      white-space: nowrap;
-    }
-
-    .current-marker {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--accent);
-      z-index: 3;
-      box-shadow: 0 0 8px var(--accent);
-      transition: left 0.15s linear;
-    }
-
-    /* ===== MONTH CALENDAR ===== */
-    .month {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      text-align: center;
-      font-size: 0.82rem;
-      margin-top: 12px;
-    }
-
-    .month div {
-      padding: 8px 0;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .month .hd {
-      font-weight: 700;
-      color: var(--text-dim);
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .month .trip {
-      border-color: var(--accent);
-      background: rgba(0, 229, 255, 0.1);
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .month .holiday {
-      outline: 2px solid var(--accent2);
-      outline-offset: -2px;
-    }
-
-    /* ===== TIER SELECTOR ===== */
-    .tier-selector {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin: 16px 0;
-    }
-
-    .tier-selector button {
-      padding: 16px 8px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      border: 2px solid var(--glass-border);
-      border-radius: var(--radius-sm);
-      background: var(--surface);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tier-selector button::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(124, 58, 237, 0.1));
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .tier-selector button:hover::before { opacity: 1; }
-
-    .tier-selector button.on {
-      border-color: var(--accent);
-      background: linear-gradient(135deg, rgba(0, 229, 255, 0.12), rgba(124, 58, 237, 0.12));
-      color: var(--accent);
-      box-shadow: var(--glow);
-    }
-
-    /* ===== ITEM LISTS ===== */
-    .item {
-      padding: 12px 0;
-      border-top: 1px dashed rgba(255, 255, 255, 0.06);
-      font-size: 0.88rem;
-      transition: background 0.2s;
-    }
-
-    .item:first-child { border-top: none; }
-
-    .item a {
-      font-weight: 600;
-      color: var(--accent);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .item a:hover { color: var(--accent3); }
-
-    .item .price {
-      float: right;
-      font-weight: 700;
-      color: var(--accent3);
-      margin-left: 8px;
-      font-size: 0.85rem;
-    }
-
-    .item .note {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
-
-    /* ===== TABS ===== */
-    .tabs {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .tabs button {
-      padding: 8px 16px;
-      font-size: 0.82rem;
-      border-radius: 99px;
-      border: 1px solid var(--glass-border);
-      background: transparent;
-      color: var(--text-dim);
-    }
-
-    .tabs button.on {
-      background: var(--accent);
-      color: var(--bg);
-      border-color: var(--accent);
-      font-weight: 700;
-    }
-
-    /* ===== SCHEDULE LIST ===== */
-    .schedule-item {
-      display: flex;
-      gap: 14px;
-      padding: 10px 0;
-      border-top: 1px dashed rgba(255, 255, 255, 0.06);
-      font-size: 0.88rem;
-      align-items: flex-start;
-    }
-
-    .schedule-item:first-child { border-top: none; }
-
-    .schedule-item .time {
-      min-width: 64px;
-      font-weight: 700;
-      color: var(--accent);
-      font-size: 0.8rem;
-      font-variant-numeric: tabular-nums;
-      padding-top: 2px;
-    }
-
-    /* ===== CHECKLIST ===== */
-    .checklist label {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 10px 0;
-      border-top: 1px dashed rgba(255, 255, 255, 0.06);
-      font-size: 0.86rem;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    .checklist label:first-child { border-top: none; }
-
-    .checklist input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-      margin-top: 2px;
-      flex-shrink: 0;
-      cursor: pointer;
-    }
-
-    .checklist label.done {
-      opacity: 0.45;
-      text-decoration: line-through;
-    }
-
-    /* ===== TABLE ===== */
-    .table-wrap { overflow-x: auto; }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 0.85rem;
-    }
-
-    td {
-      padding: 8px 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    td input {
-      width: 100%;
-      max-width: 120px;
-      padding: 6px 10px;
-      font-size: 0.82rem;
-    }
-
-    /* ===== TOTAL ===== */
-    .total-box {
-      background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(124, 58, 237, 0.08));
-      border: 1px solid rgba(0, 229, 255, 0.2);
-      border-radius: var(--radius);
-      padding: 20px;
-      text-align: center;
-      margin-top: 16px;
-    }
-
-    .total-box .big {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--accent3));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .total-box .per-person {
-      font-size: 0.82rem;
-      color: var(--text-dim);
-      margin-top: 4px;
-    }
-
-    /* ===== NOTE ===== */
-    .note {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      line-height: 1.6;
-    }
-
-    /* ===== PAST ===== */
-    .past { opacity: 0.4; text-decoration: line-through; }
-
-    /* ===== ANIMATIONS ===== */
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-12px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .animate-in {
-      animation: slideIn 0.4s ease both;
-    }
-
-    /* ===== RESPONSIVE TWEAKS ===== */
-    @media (max-width: 500px) {
-      .ticket .route b { font-size: 1.3rem; }
-      .hero { padding-top: calc(32px + var(--safe-top)); }
-      main { padding: 12px 10px 60px; }
-      .card { padding: 14px; }
-      .stat b { font-size: 1.1rem; }
-    }
-
-    /* ===== SCROLLBAR ===== */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 99px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
-
-    /* ===== TOOLTIP ===== */
-    [data-tip] {
-      position: relative;
-    }
-
-    [data-tip]:hover::after {
-      content: attr(data-tip);
-      position: absolute;
-      bottom: calc(100% + 8px);
-      left: 50%;
-      translate: -50% 0;
-      background: var(--surface2);
-      color: var(--text);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.72rem;
-      white-space: nowrap;
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--shadow);
-      z-index: 50;
-      pointer-events: none;
-      animation: fadeUp 0.2s ease;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5eee5">
+<meta name="description" content="Guía de viaje interactiva de Alli & Wali en Cartagena, marzo de 2027.">
+<title>Alli & Wali · Cartagena 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.468.0/lucide.min.css">
+<style>
+:root{color-scheme:light;--bg:#f7f3ed;--paper:#fffdfa;--ink:#172d3b;--muted:#71808a;--line:#e8e1d8;--navy:#12384b;--blue:#1d6175;--coral:#e8785d;--sand:#ead9c2;--mint:#dff0e9;--green:#23815d;--amber:#bd6c24;--shadow:0 12px 35px rgba(31,49,58,.08);--radius:22px}
+[data-theme=dark]{color-scheme:dark;--bg:#101b22;--paper:#192831;--ink:#edf4f2;--muted:#a2b1b5;--line:#2a3b44;--navy:#d8e9eb;--blue:#75b7c5;--coral:#ff9275;--sand:#34454b;--mint:#203c35;--green:#7bd0a9;--amber:#f0ad69;--shadow:0 12px 35px rgba(0,0,0,.22)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:'Plus Jakarta Sans','DM Sans',sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:calc(92px + env(safe-area-inset-bottom))}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit}.app{max-width:760px;margin:auto;min-height:100vh}.hero{position:relative;overflow:hidden;padding:26px 20px 24px;background:linear-gradient(135deg,#103c50 0%,#1c6675 55%,#dc846b 130%);color:#fff;border-radius:0 0 30px 30px}.hero:after{content:"";position:absolute;width:230px;height:230px;border:1px solid #ffffff30;border-radius:50%;right:-85px;top:-95px;box-shadow:0 0 0 25px #ffffff0a,0 0 0 55px #ffffff08}.topline{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1}.eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.78;font-weight:800}.theme-btn{border:1px solid #ffffff55;background:#ffffff18;color:#fff;width:40px;height:40px;border-radius:50%;font-size:17px}.hero h1{font-size:clamp(26px,7vw,38px);line-height:1.08;letter-spacing:-1.5px;margin:22px 0 7px;position:relative;z-index:1}.hero p{margin:0;font-size:13px;color:#e7f0ef;position:relative;z-index:1}.hero-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px;position:relative;z-index:1}.pill{padding:7px 11px;border:1px solid #ffffff40;background:#ffffff18;border-radius:30px;font-size:10px;font-weight:700}.main{padding:19px 16px 10px}.view{display:none;animation:rise .25s ease}.view.active{display:block}@keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}.section-head{display:flex;align-items:end;justify-content:space-between;margin:4px 2px 14px;gap:10px}.section-head h2{font-size:21px;letter-spacing:-.7px;margin:0}.section-head p{font-size:11px;color:var(--muted);margin:4px 0 0}.muted{color:var(--muted)}.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:13px;box-shadow:var(--shadow)}.card h3{margin:0 0 8px;font-size:15px;letter-spacing:-.3px}.small{font-size:11px;color:var(--muted);line-height:1.6}.count-card{background:linear-gradient(135deg,#fff8ed,#f3e4d2);color:#17394a;border:0;padding:18px}.count-label{font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:800;color:#66808a}.count-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}.count-unit{text-align:center;background:#ffffffa8;border-radius:13px;padding:10px 3px}.count-unit b{display:block;font-size:25px;line-height:1.1}.count-unit span{font-size:9px;color:#657981;font-weight:700}.next-step{display:flex;gap:13px;align-items:center}.step-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:15px;background:#fce6de;font-size:21px;flex:none}.next-step strong{font-size:13px}.next-step p{margin:4px 0 0;font-size:11px;color:var(--muted);line-height:1.5}.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.quick{border:1px solid var(--line);background:var(--paper);border-radius:17px;padding:13px 7px;text-align:center;text-decoration:none;display:block;min-height:83px}.quick span{display:block;font-size:20px;margin-bottom:6px}.quick b{font-size:10px}.weather-row{display:flex;align-items:center;justify-content:space-between}.weather-temp{font-size:29px;font-weight:800;letter-spacing:-1px}.weather-icon{font-size:29px}.weather-note{font-size:10px;color:var(--muted);line-height:1.5;max-width:60%}.btn{border:0;border-radius:13px;background:var(--navy);color:var(--bg);padding:11px 14px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;min-height:42px}.btn.secondary{background:var(--bg);color:var(--ink);border:1px solid var(--line)}.btn.coral{background:var(--coral);color:white}.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.bottom-nav{position:fixed;z-index:50;bottom:0;left:0;right:0;padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(20px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);max-width:760px;margin:auto}.nav-btn{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 0;font-size:9px;font-weight:700}.nav-btn .ico{font-size:19px;line-height:1.1}.nav-btn.active{color:var(--coral)}.nav-btn.active .ico{transform:translateY(-2px)}.flight-card{padding:0;overflow:hidden}.flight-top{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;border-bottom:1px dashed var(--line)}.airline{font-size:11px;font-weight:800}.status{font-size:9px;font-weight:800;padding:6px 9px;border-radius:30px;background:var(--mint);color:var(--green)}.status.pending{background:#fff0df;color:var(--amber)}.flight-route{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:18px 15px 13px;gap:8px}.airport:last-child{text-align:right}.iata{font-size:31px;letter-spacing:-1.5px;font-weight:800;line-height:1}.airport-name{font-size:9px;color:var(--muted);margin-top:5px}.flight-time{font-size:15px;font-weight:700;margin-top:8px}.flight-arrow{text-align:center;color:var(--coral);font-size:20px}.flight-arrow small{display:block;color:var(--muted);font-size:9px;white-space:nowrap}.flight-bottom{padding:11px 15px 14px;border-top:1px dashed var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}.flight-bottom .small{font-size:10px}.flight-actions{display:flex;gap:6px}.mini-btn{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:8px 10px;font-size:10px;font-weight:800}.notice{background:#fff3e6;border:1px solid #f3d7b9;color:#80501f;padding:12px 14px;border-radius:15px;font-size:11px;line-height:1.55;margin-bottom:13px}.day-tabs{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}.day-tabs::-webkit-scrollbar{display:none}.day-tab{flex:none;border:1px solid var(--line);background:var(--paper);color:var(--muted);border-radius:13px;padding:9px 13px;font-size:11px;font-weight:800}.day-tab.active{background:var(--navy);border-color:var(--navy);color:var(--bg)}.day-tab small{display:block;font-size:9px;font-weight:500;opacity:.75;margin-top:2px}.timeline{position:relative;padding-left:22px}.timeline:before{content:"";position:absolute;left:7px;top:9px;bottom:12px;width:2px;background:var(--line)}.event{position:relative;margin-bottom:12px}.event:before{content:"";position:absolute;left:-20px;top:17px;width:10px;height:10px;border-radius:50%;background:var(--coral);border:3px solid var(--paper);box-shadow:0 0 0 1px var(--coral)}.event summary{list-style:none;cursor:pointer}.event summary::-webkit-details-marker{display:none}.event-card{background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:13px;box-shadow:0 5px 18px rgba(31,49,58,.04)}.event-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.event-time{font-size:10px;color:var(--coral);font-weight:800;letter-spacing:.06em}.event-title{font-size:13px;font-weight:800;margin-top:3px}.event-desc{font-size:10px;color:var(--muted);line-height:1.5;margin-top:5px}.chevron{color:var(--muted);font-size:15px;transition:.2s}.event[open] .chevron{transform:rotate(180deg)}.event-extra{padding-top:12px}.event-photo{width:100%;height:145px;object-fit:cover;border-radius:13px;margin:2px 0 10px;display:block}.price-chip{display:inline-block;background:color-mix(in srgb,var(--blue) 12%,transparent);color:var(--blue);font-size:10px;font-weight:800;border-radius:8px;padding:6px 8px;margin:0 5px 7px 0}.tip{font-size:10px;line-height:1.55;color:var(--muted);background:var(--bg);padding:10px;border-radius:11px;margin:4px 0 10px}.event-actions{display:flex;gap:7px;flex-wrap:wrap}.event-actions .btn{font-size:10px;padding:9px 11px;min-height:37px}.tier-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0 13px}.tier-btn{border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:13px;padding:11px 5px;font-size:10px;font-weight:800}.tier-btn.active{border-color:var(--coral);background:color-mix(in srgb,var(--coral) 12%,var(--paper));color:var(--ink)}.plan-row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-top:1px solid var(--line)}.plan-row:first-of-type{border-top:0}.plan-row b{font-size:11px}.plan-row strong{font-size:11px;color:var(--coral);text-align:right}.total-panel{background:linear-gradient(135deg,#12384b,#236879);color:#fff;border-radius:20px;padding:18px;margin:13px 0}.total-panel .label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;font-weight:800}.total-number{font-size:31px;font-weight:800;letter-spacing:-1px;margin:5px 0}.total-sub{font-size:11px;opacity:.8}.bar-item{margin:13px 0}.bar-head{display:flex;justify-content:space-between;font-size:10px;margin-bottom:6px}.bar{height:8px;border-radius:20px;background:var(--line);overflow:hidden}.bar i{display:block;height:100%;background:var(--coral);border-radius:20px}.field{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:12px;font-size:13px;outline:none}.field:focus{border-color:var(--blue)}.converter{display:grid;grid-template-columns:1fr 1fr;gap:9px}.converter label{font-size:10px;color:var(--muted);font-weight:800;display:block;margin-bottom:6px}.converter .field{font-weight:700}.rate-note{font-size:9px;color:var(--muted);margin-top:9px;line-height:1.5}.group-title{font-size:11px;font-weight:800;color:var(--coral);text-transform:uppercase;letter-spacing:.09em;margin:17px 2px 6px}.task{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-top:1px solid var(--line);font-size:11px;line-height:1.5}.task:first-child{border-top:0}.task input{width:19px;height:19px;accent-color:var(--coral);flex:none;margin:0}.task.done span{text-decoration:line-through;opacity:.45}.progress{height:9px;border-radius:20px;background:var(--line);overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--coral),#eaa36e);width:0;transition:width .3s}.add-form{display:grid;gap:8px}.add-form .btn{width:100%}.custom-task{display:flex;gap:9px;align-items:flex-start}.custom-task a{color:var(--blue);font-size:10px}.modal-backdrop{position:fixed;inset:0;background:#07151dcc;z-index:100;display:none;align-items:flex-end;justify-content:center;padding:14px}.modal-backdrop.open{display:flex}.modal{background:var(--paper);color:var(--ink);width:min(100%,560px);max-height:85vh;overflow:auto;border-radius:24px;padding:20px;animation:rise .2s ease}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.modal-head h3{margin:0;font-size:17px}.close{border:0;background:var(--bg);color:var(--ink);border-radius:50%;width:35px;height:35px;font-size:18px}.key-list{display:grid;gap:11px}.key-item{display:flex;gap:11px;font-size:11px;line-height:1.5}.key-item b{display:block;font-size:12px}.footer-note{text-align:center;color:var(--muted);font-size:9px;padding:15px 10px 8px}.empty{padding:22px;text-align:center;color:var(--muted);font-size:11px}
+@media(min-width:600px){.main{padding:24px}.hero{padding:32px 28px}.quick-grid{gap:12px}.event-photo{height:190px}.bottom-nav{border-radius:20px 20px 0 0}}
+</style>
 </head>
 <body>
-
-  <!-- ===== HERO ===== -->
-  <header class="hero">
-    <h1>🏖️ Cartagena 2027</h1>
-    <p class="sub">Vuelos Copa confirmados · Jue 25 → Dom 28 de marzo · desde Cusco</p>
-    <div class="badge">Agencia de viajes futurista · Para dos</div>
-  </header>
-
-  <!-- ===== NAV ===== -->
-  <nav id="nav">
-    <a href="#vuelos" class="active">✈️ Vuelos</a>
-    <a href="#mapa">🌎 Ruta</a>
-    <a href="#estilo">💎 Estilo</a>
-    <a href="#plan">🗺️ Itinerario</a>
-    <a href="#costo">💰 Costo</a>
-    <a href="#todo">✅ Pendientes</a>
-  </nav>
-
-  <main>
-
-    <!-- ===== VUELOS ===== -->
-    <section id="vuelos">
-      <h2><span class="icon">✈️</span> Vuelos confirmados y por comprar</h2>
-      <p class="note" style="margin-bottom:16px;">Los 4 vuelos de Copa ya están pagados. Los dos boletos con borde naranja (Cusco–Lima y Lima–Cusco) aún no: cambia sus horas para simular. Todas las horas son de Lima; Panamá y Cartagena tienen la misma hora.</p>
-
-      <div class="grid-3" style="margin-bottom:20px;">
-        <div class="stat"><small>Cusco → Lima (mié): salir desde</small><b id="k1">—</b></div>
-        <div class="stat"><small>Lima → Cusco (dom): salir desde</small><b id="k2">—</b></div>
-        <div class="stat"><small>Para llegar a Cusco a tu límite, salir hasta</small><b id="k3">—</b></div>
-      </div>
-
-      <!-- Vuelo pendiente ida -->
-      <div class="ticket pending">
-        <div class="tp">Falta comprar · Mié 24 mar · Cusco → Lima</div>
-        <div class="route">
-          <div><b>CUZ</b><input id="cu" type="time" value="18:30" onchange="go()"></div>
-          <div class="arrow">✈<small id="d1">—</small></div>
-          <div><b>LIM</b><span id="a1">—</span></div>
-        </div>
-      </div>
-      <div id="c0" class="check"></div>
-      <div id="c1" class="check"></div>
-
-      <div id="fi"></div>
-
-      <!-- Vuelo pendiente vuelta -->
-      <div class="ticket pending">
-        <div class="tp">Falta comprar · Dom 28 mar · Lima → Cusco</div>
-        <div class="route">
-          <div><b>LIM</b><input id="lct" type="time" value="20:45" onchange="go()"></div>
-          <div class="arrow">✈<small id="d4">—</small></div>
-          <div><b>CUZ</b><span id="a4">—</span></div>
-        </div>
-      </div>
-      <div id="c3" class="check"></div>
-      <div id="c4" class="check"></div>
-
-      <!-- Supuestos -->
-      <details class="card">
-        <summary>⚙️ Supuestos que puedes cambiar</summary>
-        <div class="field"><label>Salgo del trabajo</label><input id="wk" type="time" value="16:00" onchange="go()"></div>
-        <div class="field"><label>Traslado al aeropuerto de Cusco (min)</label><input id="tr" type="number" value="30" onchange="go()"></div>
-        <div class="field"><label>Llegar antes del vuelo nacional (min)</label><input id="ci" type="number" value="60" onchange="go()"></div>
-        <div class="field"><label>Duración Cusco–Lima (min)</label><input id="cd" type="number" value="85" onchange="go()"></div>
-        <div class="field"><label>Margen mínimo tras aterrizar en Lima, con maleta (min)</label><input id="b2" type="number" value="150" onchange="go()"></div>
-        <div class="field"><label>Llegar a Cusco el domingo, máx.</label><input id="lim" type="time" value="22:00" onchange="go()"></div>
-      </details>
-
-      <div class="card">
-        <b>📋 Datos de tu reserva</b><br>
-        <span class="note">Copa recomienda llegar 3 horas antes. Cambiar un tramo cuesta US$ 75 por persona más la diferencia de tarifa; el pasaje no es reembolsable. Cada pasajero tiene 1 maleta incluida.</span>
-      </div>
-    </section>
-
-    <!-- ===== MAPA ===== -->
-    <section id="mapa">
-      <h2><span class="icon">🌎</span> Tu recorrido</h2>
-      <div class="card">
-        <svg id="map" viewBox="0 0 550 700" role="img" aria-label="Mapa de la ruta"></svg>
-        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:16px 0;">
-          <button id="pb" class="primary" onclick="play()">▶ Reproducir</button>
-          <input id="sc" type="range" min="16" max="122" step="0.25" value="16" style="flex:1;min-width:160px;" oninput="upd()">
-          <b id="tm" style="font-variant-numeric:tabular-nums;font-size:0.85rem;color:var(--accent);">—</b>
-        </div>
-        <div id="st" style="font-size:1rem;font-weight:600;margin:8px 0;color:var(--accent);">—</div>
-        <div class="date-labels" id="dl"></div>
-        <div class="gantt" id="gt"></div>
-        <p class="note" style="margin-top:8px;">🟣 Gris oscuro: vuelo · ⚪ Gris claro: espera · 🟠 Naranja: en Cartagena.</p>
-        <div class="month" id="mo"></div>
-        <p class="note" style="margin-top:8px;">Borde negro: días del viaje · azul: feriado en Perú (25 y 26) · domingo 28: Pascua.</p>
-      </div>
-    </section>
-
-    <!-- ===== ESTILO ===== -->
-    <section id="estilo">
-      <h2><span class="icon">💎</span> Elige tu estilo en Cartagena</h2>
-      <p class="note" style="margin-bottom:16px;">Cada estilo cambia dónde duermen, qué tours hacen, dónde comen y el costo total. Los precios son estimados míos (algunos tomados de listas de agencias de otras fechas) y en Semana Santa suben. Los links abren búsquedas o páginas de reserva.</p>
-      <div class="tier-selector" id="tier"></div>
-      <div class="grid-2" id="tp"></div>
-    </section>
-
-    <!-- ===== PLAN ===== -->
-    <section id="plan">
-      <h2><span class="icon">🗺️</span> Itinerario día por día</h2>
-      <div class="card">
-        <div class="tabs" id="tabs"></div>
-        <div id="it"></div>
-      </div>
-    </section>
-
-    <!-- ===== COSTO ===== -->
-    <section id="costo">
-      <h2><span class="icon">💰</span> Costo estimado para dos</h2>
-      <div class="card">
-        <div class="field"><label>Soles por dólar (editable)</label><input type="number" step="0.05" id="fx" value="3.6" oninput="bud()"></div>
-        <div class="field"><label>Noches en Cartagena</label><input type="number" id="nn" value="3" oninput="bud()"></div>
-        <div class="field"><label>Hotel en Lima la noche del miércoles, habitación para 2 (US$)</label><input type="number" id="hl" value="60" oninput="bud()"></div>
-        <div class="field"><label>Cusco–Lima ida y vuelta por persona (S/)</label><input type="number" id="cl" value="350" oninput="bud()"></div>
-        <div class="table-wrap"><table id="bt"></table></div>
-        <div class="total-box">
-          <div class="big" id="tot">—</div>
-        </div>
-        <p class="note" style="margin-top:12px;">Los vuelos de Copa ya están pagados con puntos. Para las tasas reales, revisa tu comprobante.</p>
-      </div>
-    </section>
-
-    <!-- ===== PENDIENTES ===== -->
-    <section id="todo">
-      <h2><span class="icon">✅</span> Pendientes y cyber</h2>
-      <div class="card">
-        <div id="ck" class="checklist"></div>
-        <h3>📅 Fechas de cyber</h3>
-        <div id="cy"></div>
-        <p class="note" style="margin-top:12px;">El Cyber Wow de noviembre ya pasó. Las promos de las aerolíneas no están confirmadas: revísalas en sus webs. Compara: <a target="_blank" rel="noopener" id="f1" style="color:var(--accent);">Cusco–Lima 24 mar</a> · <a target="_blank" rel="noopener" id="f2" style="color:var(--accent);">Lima–Cusco 28 mar</a> · <a target="_blank" rel="noopener" id="f3" style="color:var(--accent);">Lima–Cartagena 25 mar</a>.</p>
-      </div>
-    </section>
-
-  </main>
-
-  <script>
-    // ============================================================
-    //  UTILIDADES
-    // ============================================================
-    const $ = id => document.getElementById(id);
-    const DN = ['Mié','Jue','Vie','Sáb','Dom','Lun'];
-
-    const hh = h => {
-      const d = Math.floor(h / 24);
-      const m = Math.round((h - d * 24) * 60);
-      const H = Math.floor(m / 60);
-      return DN[d] + ' ' + (24 + d) + ' · ' + ('0'+H).slice(-2) + ':' + ('0'+(m%60)).slice(-2);
-    };
-
-    const tm = h => {
-      const m = Math.round(h * 60);
-      return Math.floor(m / 60) + ' h ' + ('0' + m % 60).slice(-2) + ' min';
-    };
-
-    const tv = id => {
-      const v = $(id).value.split(':');
-      return +v[0] + v[1] / 60;
-    };
-
-    // ============================================================
-    //  CONSTANTES DE VUELO
-    // ============================================================
-    const T1 = 32 + 25/60, T2 = 36 + 16/60, T3 = 37 + 25/60, T4 = 38 + 35/60;
-    const R1 = 104 + 20/60, R2 = 105 + 38/60, R3 = 110 + 21/60, R4 = 114;
-
-    let P = null;
-
-    // ============================================================
-    //  CÁLCULO DE VUELOS
-    // ============================================================
-    function calc() {
-      const p = {};
-      p.ec = tv('wk') + $('tr').value / 60 + $('ci').value / 60;
-      p.cd = $('cd').value / 60;
-      p.b2 = $('b2').value / 60;
-      p.lim = 96 + tv('lim');
-      p.cu = tv('cu');
-      p.lc = 96 + tv('lct');
-      p.cua = p.cu + p.cd;
-      p.lca = p.lc + p.cd;
-      return p;
-    }
-
-    const ck2 = h => hh(h).split(' · ')[1];
-
-    function setCheck(id, ok, text) {
-      const el = $(id);
-      el.className = 'check ' + (ok ? 'ok' : 'danger');
-      el.innerHTML = '<span class="check-icon">' + (ok ? '✅' : '⚠️') + '</span><span>' + text + '</span>';
-    }
-
-    function go() {
-      const p = P = calc();
-      const mn = R4 + p.b2;
-      const mx = p.lim - p.cd;
-
-      $('k1').textContent = ck2(p.ec);
-      $('k2').textContent = ck2(mn);
-      $('k3').textContent = ck2(mx);
-      $('k3').style.color = mx < mn ? 'var(--danger)' : 'var(--accent)';
-
-      $('d1').textContent = tm(p.cd);
-      $('a1').innerHTML = '<b>' + ck2(p.cua) + '</b><br>Mié 24';
-      $('d4').textContent = tm(p.cd);
-      $('a4').innerHTML = '<b>' + ck2(p.lca) + '</b><br>' + hh(p.lca).split(' · ')[0];
-
-      setCheck('c0', p.cu >= p.ec,
-        p.cu >= p.ec
-          ? 'Alcanzas este vuelo saliendo del trabajo a las 4 pm.'
-          : 'No alcanzas: llegarías al aeropuerto a las ' + ck2(p.ec) + '. Elige un vuelo más tarde.');
-
-      const rs = (T1 - 3) - p.cua;
-      setCheck('c1', rs >= 6,
-        'Aterrizan en Lima ' + ck2(p.cua) + '. Deben estar en el aeropuerto a las ' + ck2(T1 - 3) +
-        ' del jueves: les quedan ≈ ' + tm(Math.max(0, rs)) + ' (duerman en un hotel cerca del aeropuerto o cenen en Miraflores y vuelvan temprano).');
-
-      setCheck('c3', p.lc - R4 >= p.b2,
-        'Aterrizan de Panamá a las 18:00 y su vuelo a Cusco sale ' + ck2(p.lc) +
-        ': margen de ' + tm(Math.max(0, p.lc - R4)) +
-        (p.lc - R4 >= p.b2 ? ' (suficiente con maleta).' : '. Muy justo; recomendado mínimo ' + tm(p.b2) + '.'));
-
-      setCheck('c4', p.lca <= p.lim,
-        p.lca <= p.lim
-          ? 'Llegan a Cusco ' + ck2(p.lca) + ', dentro de su límite.'
-          : 'Llegan a Cusco ' + hh(p.lca) + ', pasa su límite de ' + ck2(p.lim) +
-            (mx < mn ? ' Con ese límite casi no hay ventana segura: acepten llegar más tarde o duerman en Lima y vuelen temprano el lunes.' : ''));
-
-      gantt();
-      upd();
-    }
-
-    // ============================================================
-    //  MAPA
-    // ============================================================
-    const px = p => [(p[0] + 85) * 10, (15 - p[1]) * 10];
-    const LL = { cu:[-71.97,-13.53], li:[-77.04,-12.05], pt:[-79.52,9.07], ct:[-75.5,10.4] };
-
-    const CO = [-77.4,8.7,-75.5,10.8,-74,11.1,-72,12.2,-71.3,11,-70,12,-68,10.6,-64,10.6,-62,10.7,-60,8.5,-57,6,-53,5.5,-51,4,-50,1.5,-48,-1,-44,-2.5,-40,-3,-35,-5.5,-35,-9,-38.5,-13,-39,-17,-40.5,-22,-43,-23,-46,-24,-48.5,-26,-48.7,-28.5,-51,-31,-53.5,-34,-56,-34.9,-57.5,-36,-57,-38,-62,-39,-65,-41,-64.5,-43,-67.5,-46,-66,-48,-68.5,-50.5,-69,-52.5,-68.5,-54,-72,-53.5,-75,-50,-74,-45,-73.5,-40,-73.5,-37,-72,-33,-71.5,-28,-70.3,-23,-70.2,-18.5,-72,-17,-75,-15.5,-77,-12,-79,-8,-81,-5,-80,-2.5,-80.5,0,-78.8,1.8,-77.5,4];
-
-    function buildMap() {
-      let d = 'M';
-      for (let i = 0; i < CO.length; i += 2) {
-        const p = px([CO[i], CO[i+1]]);
-        d += p[0] + ',' + p[1] + ' ';
-      }
-      const cu = px(LL.cu), li = px(LL.li), pt = px(LL.pt), ct = px(LL.ct);
-      const dx = pt[0] - li[0], dy = pt[1] - li[1];
-      const cx = (li[0] + pt[0]) / 2 + dy * 0.15, cy = (li[1] + pt[1]) / 2 - dx * 0.15;
-
-      const ln = (id, path, dash, w) =>
-        `<path id="${id}" d="${path}" stroke="var(--accent)" fill="none" stroke-dasharray="${dash}" stroke-width="${w}" opacity="0.8"/>`;
-
-      const cities = [
-        ['Cusco', cu, 9, 16],
-        ['Lima', li, -8, -9],
-        ['Panamá', pt, -9, 18],
-        ['Cartagena', ct, 10, 4]
-      ];
-
-      $('map').innerHTML =
-        `<path d="${d}Z" fill="var(--surface2)" stroke="var(--text-dim)" stroke-width="1" opacity="0.5"/>` +
-        ln('pa', `M${cu} L${li}`, '4 4', 2) +
-        ln('pb', `M${li} Q${cx},${cy} ${pt}`, '6 5', 2.5) +
-        ln('pc', `M${pt} L${ct}`, '6 5', 2.5) +
-        cities.map(c =>
-          `<circle cx="${c[1][0]}" cy="${c[1][1]}" r="6" fill="var(--accent)" stroke="#fff" stroke-width="1.5" filter="url(#glow)"/>` +
-          `<text x="${c[1][0] + c[2]}" y="${c[1][1] + c[3]}" font-size="14" fill="var(--text)" ${c[2] < 0 ? 'text-anchor="end"' : ''} font-weight="600">${c[0]}</text>`
-        ).join('') +
-        `<defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` +
-        `<g id="pn"><path d="M13 0L-9 -8L-5 0L-9 8Z" fill="var(--accent)" stroke="#fff" stroke-width="1.5"/></g>`;
-    }
-
-    // ============================================================
-    //  SEGMENTOS / TIMELINE
-    // ============================================================
-    function segs() {
-      const p = P;
-      return [
-        [0, p.cu, 'est', 'En Cusco 🏔️', 'cu'],
-        [p.cu, p.cua, 'vuelo', 'Vuelo Cusco → Lima', 'pa', 0],
-        [p.cua, T1, 'esp', 'Noche en Lima 🌙', 'li'],
-        [T1, T2, 'vuelo', 'Copa 410 · Lima → Panamá', 'pb', 0],
-        [T2, T3, 'esp', 'Conexión en Panamá', 'pt'],
-        [T3, T4, 'vuelo', 'Copa 304 · Panamá → Cartagena', 'pc', 0],
-        [T4, R1, 'des', 'En Cartagena 🏖️ ¡disfrutando!', 'ct'],
-        [R1, R2, 'vuelo', 'Copa 160 · Cartagena → Panamá', 'pc', 1],
-        [R2, R3, 'esp', 'Espera en Panamá ☕', 'pt'],
-        [R3, R4, 'vuelo', 'Copa 661 · Panamá → Lima', 'pb', 1],
-        [R4, p.lc, 'esp', 'En Lima, esperando', 'li'],
-        [p.lc, p.lca, 'vuelo', 'Vuelo Lima → Cusco', 'pa', 1],
-        [p.lca, 999, 'est', 'De vuelta en Cusco 🏔️', 'cu']
-      ];
-    }
-
-    function upd() {
-      if (!$('pa') || !P) return;
-      const h = +$('sc').value;
-      const s = segs();
-      let g = s[12];
-      for (let i = 0; i < 13; i++) {
-        if (h >= s[i][0] && h < s[i][1]) { g = s[i]; break; }
-      }
-
-      let x, y, an = -90;
-      if (g[2] === 'vuelo') {
-        const A = $(g[4]), L = A.getTotalLength();
-        const t = (h - g[0]) / ((g[1] - g[0]) || 1);
-        const u = g[5] ? 1 - t : t;
-        const a = A.getPointAtLength(L * u);
-        const b = A.getPointAtLength(L * Math.min(1, Math.max(0, u + (g[5] ? -0.02 : 0.02))));
-        x = a.x; y = a.y;
-        an = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
-      } else {
-        const q = px(LL[g[4]]);
-        x = q[0]; y = q[1];
-      }
-
-      $('pn').setAttribute('transform', `translate(${x},${y}) rotate(${an}) scale(1.2)`);
-      $('st').textContent = g[3];
-      $('tm').textContent = hh(h);
-
-      const c = $('cr');
-      if (c) c.style.left = (h - 16) / 106 * 100 + '%';
-    }
-
-    // ============================================================
-    //  PLAY
-    // ============================================================
-    let timer = null;
-
-    function play() {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
-        $('pb').textContent = '▶ Reproducir';
-        return;
-      }
-      $('pb').textContent = '⏸ Pausa';
-      if (+$('sc').value >= 122) $('sc').value = 16;
-      timer = setInterval(() => {
-        let v = +$('sc').value + 0.4;
-        if (v >= 122) { v = 122; play(); }
-        $('sc').value = v;
-        upd();
-      }, 60);
-    }
-
-    // ============================================================
-    //  GANTT
-    // ============================================================
-    function gantt() {
-      let labels = '';
-      [16, 24, 48, 72, 96].forEach(h => {
-        labels += `<span style="left:${(h - 16) / 106 * 100}%">${hh(h).split(' · ')[0]}</span>`;
-      });
-      $('dl').innerHTML = labels;
-
-      let bars = '';
-      segs().forEach(g => {
-        const a = Math.max(g[0], 16);
-        const b = Math.min(g[1], 122);
-        if (b <= a) return;
-        const bg = g[2] === 'vuelo' ? 'linear-gradient(135deg,#455a64,#37474f)' :
-                   g[2] === 'des' ? 'linear-gradient(135deg,var(--accent),var(--accent2))' :
-                   'var(--surface2)';
-        const color = (g[2] === 'esp' || g[2] === 'est') ? 'color:var(--text-dim);' : '';
-        const label = g[2] === 'des' ? 'Cartagena' : g[2] === 'vuelo' ? '✈' : '';
-        bars += `<i title="${g[3]}" style="left:${(a - 16) / 106 * 100}%;width:${(b - a) / 106 * 100}%;background:${bg};${color}">${label}</i>`;
-      });
-      $('gt').innerHTML = bars + '<div class="current-marker" id="cr"></div>';
-    }
-
-    // ============================================================
-    //  VUELOS COPA (FIJO)
-    // ============================================================
-    const FX = [
-      ['Ida · Copa 410', 'LIM', '08:25', 'Jue 25', 'PTY', '12:16', '3 h 51 min'],
-      ['Ida · Copa 304', 'PTY', '13:25', 'Jue 25', 'CTG', '14:35', '1 h 10 min'],
-      ['Vuelta · Copa 160', 'CTG', '08:20', 'Dom 28', 'PTY', '09:38', '1 h 18 min'],
-      ['Vuelta · Copa 661', 'PTY', '14:21', 'Dom 28', 'LIM', '18:00', '3 h 39 min']
-    ];
-
-    const FC = [
-      '<div class="check warn"><span class="check-icon">⚠️</span><span>Conexión en Panamá de 1 h 09 min: es ajustada, pero está en el mismo boleto, así que si hay retraso Copa los reubica.</span></div>',
-      '<div class="check ok"><span class="check-icon">🎉</span><span>Llegan a Cartagena el jueves 14:35 y salen el domingo 08:20: 3 noches y solo 2 días completos (viernes y sábado).</span></div>',
-      '<div class="check"><span class="check-icon">☕</span><span>Espera de 4 h 43 min en Panamá: coman y descansen en el aeropuerto.</span></div>'
-    ];
-
-    function fi() {
-      $('fi').innerHTML = FX.map((f, i) =>
-        `<div class="ticket">
-          <div class="tp">${f[0]} · ${f[3]}</div>
-          <div class="route">
-            <div><b>${f[1]}</b>${f[2]}</div>
-            <div class="arrow">✈<small>${f[6]}</small></div>
-            <div><b>${f[4]}</b>${f[5]}</div>
-          </div>
-        </div>${FC[i] || ''}`
-      ).join('');
-    }
-
-    // ============================================================
-    //  CALENDARIO
-    // ============================================================
-    function month() {
-      let s = 'LMMJVSD'.split('').map(x => `<div class="hd">${x}</div>`).join('');
-      for (let d = 1; d <= 31; d++) {
-        const cls = (d >= 24 && d <= 28 ? 'trip ' : '') + (d === 25 || d === 26 ? 'holiday' : '');
-        s += `<div class="${cls}">${d}${d === 28 ? '🐣' : ''}</div>`;
-      }
-      $('mo').innerHTML = s;
-    }
-
-    // ============================================================
-    //  LINKS
-    // ============================================================
-    const gm = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
-    const gs = q => 'https://www.google.com/search?q=' + encodeURIComponent(q);
-
-    const AB = 'https://www.airbnb.com/s/Cartagena--Colombia/homes?checkin=2027-03-24&checkout=2027-03-28&adults=2';
-    const BK = 'https://www.booking.com/searchresults.html?ss=Cartagena%20Colombia&checkin=2027-03-24&checkout=2027-03-28&group_adults=2';
-
-    // ============================================================
-    //  ESTILOS / TIERS
-    // ============================================================
-    const TI = [
-      {
-        n: '💸 Económico',
-        num: [55, 20, 55, 25],
-        lo: [
-          ['Hostel con habitación privada en Getsemaní', 'Media Luna, Mamallena o Viajero: ambiente joven, a pie del centro.', 'US$45–70/noche', gm('Media Luna Hostel Cartagena')],
-          ['Airbnb: habitación o estudio sencillo', 'Busca Getsemaní, con aire acondicionado y buenas reseñas.', 'US$40–65/noche', AB]
-        ],
-        to: [
-          ['Playa Blanca en lancha compartida', 'Día de playa en Barú; llevan efectivo para sillas y comida.', 'US$30–45 p/p', gs('tour Playa Blanca desde Cartagena lancha precio')],
-          ['Volcán del Totumo', 'Baño de lodo, medio día, tour compartido.', 'US$20–30 p/p', gs('tour Volcán del Totumo desde Cartagena precio')],
-          ['Free walking tour del Centro', 'Se paga con propina; buen primer paseo.', 'Propina', gs('free walking tour Cartagena centro amurallado')]
-        ],
-        co: [
-          ['Plaza de la Trinidad', 'Comida callejera de noche, barata y con ambiente.', '', gm('Plaza de la Trinidad Cartagena')],
-          ['Mercado de Bazurto', 'Auténtico y económico; vayan temprano.', '', gm('Mercado de Bazurto Cartagena')],
-          ['Cocina de Pepina', 'Comida típica en Getsemaní.', '', gm('Cocina de Pepina Cartagena')]
-        ]
-      },
-      {
-        n: '⭐ Regular',
-        num: [110, 38, 110, 40],
-        lo: [
-          ['Airbnb: apartamento de 1 habitación', 'Getsemaní o Centro, con cocina y aire acondicionado.', 'US$90–140/noche', AB],
-          ['Hotel boutique 3–4★', 'Por ejemplo Movich Cartagena de Indias; revisa precio de Semana Santa.', 'US$110–190/noche', gm('Movich Hotel Cartagena de Indias')]
-        ],
-        to: [
-          ['Catamarán a Islas del Rosario con almuerzo', 'Snorkel y playa; en listas de agencias ronda 258–272 mil COP por adulto (otra temporada).', '≈ US$65–70 p/p', 'https://www.civitatis.com/es/cartagena-de-indias/excursion-islas-rosario/'],
-          ['Atardecer en la bahía', 'Paseo en velero o catamarán con bebidas.', 'US$25–40 p/p', gs('paseo atardecer bahía Cartagena velero precio')],
-          ['Castillo San Felipe con guía', 'Fortaleza clave de la ciudad; vayan temprano por el calor.', 'US$20–35 p/p', gm('Castillo San Felipe de Barajas')]
-        ],
-        co: [
-          ['La Cevichería', 'Ceviches famosos; algo caro y con fila.', '', gm('La Cevichería Cartagena')],
-          ['Café del Mar', 'Atardecer sobre la muralla.', '', gm('Café del Mar Cartagena')],
-          ['Alquímico', 'Bar de cócteles muy conocido, ideal en pareja.', '', gm('Alquímico Cartagena')]
-        ]
-      },
-      {
-        n: '💎 Premium',
-        num: [330, 85, 230, 80],
-        lo: [
-          ['Hotel de lujo en el Centro Histórico', 'Casa San Agustín, Sofitel Legend Santa Clara o Charleston Santa Teresa (ex conventos y casonas).', 'US$250–450+/noche', gm('Sofitel Legend Santa Clara Cartagena')],
-          ['Airbnb: casa colonial completa', 'Con terraza o piscina; pidan fotos y reseñas recientes.', 'US$300+/noche', AB]
-        ],
-        to: [
-          ['Lancha o catamarán privado', 'Islas del Rosario o Barú solo para ustedes (precio por embarcación, a cotizar).', '≈ US$500–1,000 total', gs('alquiler lancha privada Islas del Rosario Cartagena')],
-          ['Beach club en las islas', 'Día en club con servicio; en tours tipo lancha deportiva parte desde unos US$95 p/p.', 'US$95+ p/p', 'https://pelago.com/en/activity/pxgtt14j2-full-day-rosario-islands-including-baru-cholon-and-playa-blanca-cartagena'],
-          ['Paseo privado en coche por el Centro', 'Con Castillo San Felipe; en una lista de agencia, 110–188 mil COP p/p por 30–60 min.', '≈ US$30–50 p/p', gs('tour privado coche caballos Cartagena centro histórico')]
-        ],
-        co: [
-          ['Cena en restaurante de autor', 'Busquen alta cocina en el Centro Histórico y reserven con tiempo.', '', gm('restaurantes alta cocina Centro Histórico Cartagena')],
-          ['Cócteles en Alquímico', 'Para después de la cena.', '', gm('Alquímico Cartagena')],
-          ['Café del Mar', 'Atardecer sobre la muralla, mesa reservada.', '', gm('Café del Mar Cartagena')]
-        ]
-      }
-    ];
-
-    let ti = 1;
-
-    function item(r) {
-      return `<div class="item">
-        <span class="price">${r[2]}</span>
-        <a target="_blank" rel="noopener" href="${r[3]}">${r[0]} ↗</a>
-        <br><span class="note">${r[1]}</span>
-      </div>`;
-    }
-
-    function tiers() {
-      $('tier').innerHTML = TI.map((t, i) =>
-        `<button class="${i === ti ? 'on' : ''}" onclick="ti=${i};tiers();bud()">${t.n}</button>`
-      ).join('');
-
-      const t = TI[ti];
-      $('tp').innerHTML = `
-        <div class="card" style="grid-column:1/-1">
-          <h3>🌙 Miércoles en Lima (vuelo a las 08:25)</h3>
-          ${item(['Hotel cerca del aeropuerto Jorge Chávez', 'Duermen pocas horas y llegan al check-in sin apuro.', 'US$50–120', gm('hotel cerca aeropuerto Jorge Chávez Lima')])}
-          ${item(['Cena en Miraflores o Barranco', 'Si prefieren pasear, vuelvan al aeropuerto antes de las 05:25.', '', gm('restaurantes Miraflores Lima')])}
-        </div>
-        <div class="card">
-          <h3>🛏️ Dónde dormir en Cartagena</h3>
-          ${t.lo.map(item).join('')}
-          <div class="note" style="margin-top:8px;">Más opciones: <a target="_blank" rel="noopener" href="${BK}">Booking</a> · <a target="_blank" rel="noopener" href="${AB}">Airbnb</a></div>
-        </div>
-        <div class="card">
-          <h3>🏝️ Tours y actividades</h3>
-          ${t.to.map(item).join('')}
-        </div>
-        <div class="card" style="grid-column:1/-1">
-          <h3>🍽️ Dónde comer</h3>
-          ${t.co.map(item).join('')}
-        </div>
-      `;
-    }
-
-    // ============================================================
-    //  COSTO
-    // ============================================================
-    function bud() {
-      const t = TI[ti];
-      const L = [
-        'Alojamiento en Cartagena (US$/noche)',
-        'Comida por persona y día (US$)',
-        'Tours por persona (US$)',
-        'Transporte local total (US$)'
-      ];
-      let html = '';
-      L.forEach((label, i) => {
-        html += `<tr>
-          <td>${label}</td>
-          <td><input type="number" value="${t.num[i]}" oninput="TI[ti].num[${i}]=+this.value;tot()"></td>
-        </tr>`;
-      });
-      $('bt').innerHTML = html;
-      tot();
-    }
-
-    function tot() {
-      const t = TI[ti].num;
-      const fx = +$('fx').value;
-      const n = +$('nn').value;
-      const s = (t[0] * n + t[1] * (n + 1) * 2 + t[2] * 2 + t[3] + +$('hl').value) * fx + (+$('cl').value) * 2;
-      $('tot').innerHTML = `${TI[ti].n}: ≈ S/ ${Math.round(s).toLocaleString('es-PE')}
-        <div class="per-person">≈ S/ ${Math.round(s / 2).toLocaleString('es-PE')} por persona</div>`;
-    }
-
-    // ============================================================
-    //  ITINERARIO
-    // ============================================================
-    const DAYS = [
-      ['Mié 24', [
-        ['18:30', 'Vuelo Cusco → Lima (el que elijan).'],
-        ['Noche', 'Cena en Miraflores o descanso en un hotel cerca del aeropuerto.'],
-        ['Dormir', 'Pongan alarma para ~04:15: deben estar en el aeropuerto a las 05:25.']
-      ]],
-      ['Jue 25', [
-        ['05:25', 'Check-in de Copa 410 (3 h antes). Vuelo 08:25 a Panamá.'],
-        ['13:25', 'Conexión a Cartagena; llegan 14:35.'],
-        ['15:45', 'Taxi al alojamiento y check-in en Getsemaní (≈ 20 000 COP desde el aeropuerto).'],
-        ['17:00', 'Paseo por el Centro Amurallado: Torre del Reloj y Plaza de Santo Domingo.'],
-        ['Atardecer', 'Murallas o Café del Mar.'],
-        ['Noche', 'Cena en Getsemaní y Plaza de la Trinidad.']
-      ]],
-      ['Vie 26', [
-        ['8:00', 'Tour a Islas del Rosario o Playa Blanca (reserven antes: Viernes Santo es temporada alta).'],
-        ['Día', 'Snorkel, playa y almuerzo en la isla.'],
-        ['17:00', 'Regresan; quizá vean procesiones del Viernes Santo en el centro.'],
-        ['Noche', 'Cena tranquila: mañana también hay plan.']
-      ]],
-      ['Sáb 27', [
-        ['8:30', 'Castillo San Felipe de Barajas (vayan temprano, hace calor).'],
-        ['Mediodía', 'Descanso o piscina.'],
-        ['Tarde', 'Getsemaní: murales, artesanías y compras.'],
-        ['Atardecer', 'Paseo en velero o cena especial de despedida.'],
-        ['Noche', 'Acuéstense temprano: se levantan a las 4.']
-      ]],
-      ['Dom 28', [
-        ['04:30', 'Taxi al aeropuerto de Cartagena; llegan 05:20.'],
-        ['08:20', 'Copa 160 a Panamá (llegan 09:38).'],
-        ['14:21', 'Copa 661 a Lima; llegan 18:00.'],
-        ['~20:45', 'Vuelo Lima → Cusco, con margen de ≥ 2 h 30 min tras aterrizar.']
-      ]]
-    ];
-
-    let di = 1;
-
-    function itin() {
-      $('tabs').innerHTML = DAYS.map((d, i) =>
-        `<button class="${i === di ? 'on' : ''}" onclick="di=${i};itin()">${d[0]}</button>`
-      ).join('');
-
-      $('it').innerHTML = DAYS[di][1].map(s =>
-        `<div class="schedule-item">
-          <span class="time">${s[0]}</span>
-          <span>${s[1]}</span>
-        </div>`
-      ).join('');
-    }
-
-    // ============================================================
-    //  CHECKLIST
-    // ============================================================
-    const CK = [
-      ['Hoy', 'Guardar el voucher de Copa en el celular y en papel'],
-      ['27 nov – 1 dic', 'Comprar Cusco–Lima (mié 24) y Lima–Cusco (dom 28) con las horas de la simulación'],
-      ['Dic – ene', 'Reservar hotel en Lima (miércoles) y alojamiento en Cartagena (jue, vie, sáb)'],
-      ['Feb', 'Reservar tour de islas; consultar sobre la vacuna de fiebre amarilla'],
-      ['Mar 21–23', 'Check-Mig de los dos y seguro de viaje; pesos colombianos en efectivo'],
-      ['Mié 24 mar', 'Web check-in de Copa 410 (normalmente abre 24 h antes; confirma en Copa)'],
-      ['Jue 25 mar', 'Estar en el aeropuerto de Lima a las 05:25']
-    ];
-
-    function ck() {
-      let st = {};
-      try { st = JSON.parse(localStorage.getItem('ck27') || '{}'); } catch (e) {}
-      $('ck').innerHTML = CK.map((c, i) =>
-        `<label class="${st[i] ? 'done' : ''}">
-          <input type="checkbox" ${st[i] ? 'checked' : ''} onchange="sv(${i},this.checked);this.parentElement.classList.toggle('done')">
-          <span><b>${c[0]}</b> · ${c[1]}</span>
-        </label>`
-      ).join('');
-    }
-
-    function sv(i, v) {
-      try {
-        const st = JSON.parse(localStorage.getItem('ck27') || '{}');
-        st[i] = v;
-        localStorage.setItem('ck27', JSON.stringify(st));
-      } catch (e) {}
-    }
-
-    // ============================================================
-    //  CYBER
-    // ============================================================
-    const CY = [
-      ['2026-11-24', 'Último día para canjear puntos CMR'],
-      ['2026-11-27', 'Black Friday (referencia)'],
-      ['2026-11-30', 'Cyber Monday (referencia)'],
-      ['2026-12-01', 'Travel Tuesday (sin confirmar)']
-    ];
-
-    function cy() {
-      const n = new Date();
-      const t = new Date(n.getFullYear(), n.getMonth(), n.getDate());
-      $('cy').innerHTML = CY.map(c => {
-        const p = c[0].split('-');
-        const k = Math.round((new Date(+p[0], +p[1] - 1, +p[2]) - t) / 864e5);
-        const label = k < 0 ? 'ya pasó' : k === 0 ? '¡hoy!' : 'en ' + k + ' d';
-        return `<div class="field ${k < 0 ? 'past' : ''}">
-          <span>${c[1]}</span><b style="color:${k < 0 ? 'var(--text-dim)' : 'var(--accent)'}">${label}</b>
-        </div>`;
-      }).join('');
-
-      const g = (a, b, d) => 'https://www.google.com/travel/flights?q=' + encodeURIComponent('Flights from ' + a + ' to ' + b + ' on ' + d);
-      $('f1').href = g('CUZ', 'LIM', '2027-03-24');
-      $('f2').href = g('LIM', 'CUZ', '2027-03-28');
-      $('f3').href = g('LIM', 'CTG', '2027-03-25');
-    }
-
-    // ============================================================
-    //  NAV SCROLL SPY
-    // ============================================================
-    function scrollSpy() {
-      const sections = document.querySelectorAll('section[id]');
-      const navLinks = document.querySelectorAll('nav a');
-      window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(sec => {
-          const top = sec.offsetTop - 100;
-          if (window.scrollY >= top) current = sec.id;
-        });
-        navLinks.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === '#' + current);
-        });
-      }, { passive: true });
-    }
-
-    // ============================================================
-    //  INIT
-    // ============================================================
-    buildMap();
-    month();
-    fi();
-    itin();
-    tiers();
-    bud();
-    ck();
-    cy();
-    go();
-    scrollSpy();
-  </script>
-</body>
-</html>
+<div class="app">
+<header class="hero">
+ <div class="topline"><div class="eyebrow">Nuestro próximo capítulo · Colombia</div><button class="theme-btn" id="themeToggle" aria-label="Cambiar tema">☾</button></div>
+ <h1>Alli & Wali<br>Cartagena 2027 <span style="font-size:.7em">☀️</span></h1>
+ <p>Jueves 25 → domingo 28 de marzo · Salida desde Cusco</p>
+ <div class="hero-meta"><span class="pill">♡ Viaje de pareja</span><span class="pill">4 días · 3 noches</span><span class="pill">CUZ → CTG</span></div>
+</header>
+<main class="main">
+<section class="view active" id="view-home">
+ <div class="section-head"><div><h2>¡Hola, viajeros! 🌴</h2><p>La cuenta regresiva ya empezó.</p></div><button class="btn secondary" id="keyOpen">Datos clave</button></div>
+ <div class="card count-card"><div class="count-label">Faltan para salir · miércoles 24 mar 2027</div><div class="count-grid"><div class="count-unit"><b id="cd">—</b><span>DÍAS</span></div><div class="count-unit"><b id="ch">—</b><span>HORAS</span></div><div class="count-unit"><b id="cm">—</b><span>MIN</span></div><div class="count-unit"><b id="cs">—</b><span>SEG</span></div></div></div>
+ <div class="card"><div class="next-step"><div class="step-icon">🧾</div><div><strong>Próximo paso: comprar los vuelos Cusco ↔ Lima</strong><p>JetSMART · Ida mié 24 (22:30) y retorno dom 28 (20:00). Pendiente para ambos.</p></div></div><div class="btn-row"><button class="btn coral" onclick="go('todo')">Ver pendientes →</button><button class="btn secondary" onclick="go('flights')">Ver vuelos</button></div></div>
+ <div class="card"><div class="weather-row"><div><div class="count-label">Cartagena · referencia climática</div><div class="weather-temp">☀️ 27–31 °C</div><div class="small">Calor húmedo · marzo suele ser cálido</div></div><div class="weather-icon">🌊</div></div><p class="small" style="margin-top:9px">Es una referencia estacional, no un pronóstico para las fechas del viaje. Revisen el clima real unos días antes.</p></div>
+ <div class="section-head"><div><h2>Accesos rápidos</h2><p>Lo esencial, a un toque.</p></div></div>
+ <div class="quick-grid">
+  <a class="quick" href="tel:123"><span>🆘</span><b>Emergencias</b></a>
+  <button class="quick" onclick="openModal('currencyModal')"><span>💱</span><b>Frases y moneda</b></button>
+  <a class="quick" href="https://apps.migracioncolombia.gov.co/pre-registro/public/preregistro.jsf" target="_blank" rel="noopener"><span>🛂</span><b>Check-Mig</b></a>
+ </div>
+ <div class="card" style="margin-top:13px"><h3>Una pequeña misión para hoy ✨</h3><p class="small">Guarden los vouchers de Copa en el celular y en papel. Mantengan a mano pasaportes, reservas y datos del alojamiento.</p></div>
+</section>
+
+<section class="view" id="view-flights">
+ <div class="section-head"><div><h2>Tarjetas de embarque ✈️</h2><p>Todos los tramos del viaje, en un solo lugar.</p></div></div>
+ <div class="notice">Los cuatro vuelos de Copa están pagados. Los dos tramos JetSMART entre Cusco y Lima todavía faltan comprar. Los códigos de reserva no aparecen en el documento base; pueden agregarlos aquí más adelante.</div>
+ <div id="flightList"></div>
+ <div class="card"><h3>Conexiones en Panamá</h3><div class="plan-row"><b>Ida · PTY</b><strong>1 h 09 min</strong></div><div class="small">Llegan 12:16 y el siguiente vuelo sale 13:25. Conexión ajustada: sigan las indicaciones de Copa y confirmen puertas al aterrizar.</div><div class="plan-row"><b>Vuelta · PTY</b><strong>4 h 43 min</strong></div><div class="small">Llegan 09:38 y salen 14:21 rumbo a Lima.</div></div>
+ <div class="card"><h3>Documentos y check-in</h3><p class="small">Copa: <a href="https://www.copaair.com/es-pe/" target="_blank" rel="noopener">web oficial</a> · JetSMART: <a href="https://www.jetsmart.com/pe/es/" target="_blank" rel="noopener">web oficial</a>.</p><p class="small" style="margin-top:7px">Verifiquen horarios, terminales, equipaje permitido y requisitos migratorios directamente con las aerolíneas antes de viajar.</p></div>
+</section>
+
+<section class="view" id="view-itinerary">
+ <div class="section-head"><div><h2>El viaje, día a día 🗺️</h2><p>Abre cada momento para ver rutas, fotos e ideas.</p></div></div>
+ <div class="day-tabs" id="dayTabs"></div><div id="itinerary"></div>
+</section>
+
+<section class="view" id="view-budget">
+ <div class="section-head"><div><h2>Presupuesto & planes 💳</h2><p>Elige el estilo y ajusta el presupuesto estimado.</p></div></div>
+ <div class="card"><h3>¿Qué viaje queremos?</h3><div class="tier-tabs" id="tierTabs"><button class="tier-btn" data-tier="0">💸 Económico</button><button class="tier-btn active" data-tier="1">⭐ Regular</button><button class="tier-btn" data-tier="2">💎 Premium</button></div><div id="planDetails"></div></div>
+ <div id="budgetTotal"></div>
+ <div class="card"><h3>Distribución del presupuesto</h3><div id="budgetBars"></div><p class="small">Estimación para dos personas. Alojamiento calculado por 3 noches; comida por 4 días; tour para 2 y transporte local como bolsa estimada. No incluye vuelos Cusco–Lima.</p></div>
+ <div class="card"><h3>Calculadora de cambio 💱</h3><p class="small" style="margin-bottom:12px">Convierte PEN, COP y USD. La tasa se actualiza cuando hay conexión; sin internet usa una referencia editable.</p><div class="converter"><div><label for="amount">Cantidad</label><input class="field" id="amount" type="number" value="100" min="0" step="any"></div><div><label for="fromCurrency">Tengo</label><select class="field" id="fromCurrency"><option value="PEN">PEN · Soles</option><option value="COP">COP · Pesos</option><option value="USD">USD · Dólares</option></select></div><div><label for="toCurrency">Quiero ver en</label><select class="field" id="toCurrency"><option value="COP">COP · Pesos</option><option value="PEN">PEN · Soles</option><option value="USD">USD · Dólares</option></select></div><div><label>Resultado aproximado</label><div class="field" id="converted" style="min-height:44px;display:flex;align-items:center">—</div></div></div><div class="rate-note" id="rateNote">Cargando tasas de referencia…</div><button class="btn secondary" id="refreshRates" style="margin-top:10px">↻ Actualizar tasas</button></div>
+</section>
+
+<section class="view" id="view-todo">
+ <div class="section-head"><div><h2>Checklist & documentos ✅</h2><p>Marquen lo que ya está listo. Se guarda en este dispositivo.</p></div></div>
+ <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:12px">Progreso de preparación</b><b id="progressText" style="font-size:12px;color:var(--coral)">0%</b></div><div class="progress"><i id="progressBar"></i></div><div class="small" id="progressSub">0 de 0 tareas completadas</div></div>
+ <div id="checklist"></div>
+ <div class="card"><h3>➕ Agregar pendiente o nota</h3><form class="add-form" id="addTaskForm"><input class="field" id="newTask" placeholder="Ej. Confirmar reserva del hotel" required><input class="field" id="newLink" type="url" placeholder="Enlace opcional (https://…)"><select class="field" id="newGroup"><option>Hoy</option><option>27 nov – 1 dic</option><option>Dic – ene</option><option>Feb</option><option>Mar 21–23</option><option>Mié 24 mar</option><option>Jue 25 mar</option><option>Notas personales</option></select><button class="btn coral" type="submit">Guardar pendiente +</button></form></div>
+ <div class="card"><h3>Documentos importantes</h3><div class="small">• Pasaportes vigentes de ambos.<br>• Vouchers y códigos de reserva de Copa y JetSMART.<br>• Reserva del alojamiento y tours.<br>• Seguro de viaje y comprobantes.<br>• Check-Mig de cada viajero, según indicaciones oficiales vigentes.</div><div class="btn-row"><a class="btn secondary" href="https://apps.migracioncolombia.gov.co/pre-registro/public/preregistro.jsf" target="_blank" rel="noopener">Abrir Check-Mig ↗</a></div></div>
+</section>
+<div class="footer-note">Hecho con cariño para Alli & Wali · Cartagena, Colombia · 2027<br>Precios y horarios son estimados / sujetos a confirmación.</div>
+</main>
+<nav class="bottom-nav" aria-label="Navegación principal">
+ <button class="nav-btn active" data-view="home"><span class="ico">⌂</span>Inicio</button>
+ <button class="nav-btn" data-view="flights"><span class="ico">✈</span>Vuelos</button>
+ <button class="nav-btn" data-view="itinerary"><span class="ico">⌖</span>Itinerario</button>
+ <button class="nav-btn" data-view="budget"><span class="ico">◈</span>Presupuesto</button>
+ <button class="nav-btn" data-view="todo"><span class="ico">☑</span>Checklist</button>
+</nav>
+</div>
+
+<div class="modal-backdrop" id="keyModal"><div class="modal"><div class="modal-head"><h3>Datos clave de Cartagena 🇨🇴</h3><button class="close" onclick="closeModal('keyModal')">×</button></div><div class="key-list">
+ <div class="key-item"><span>💱</span><div><b>Cambio de moneda</b>Referencia inicial editable: 1 PEN ≈ 1.050 COP y 1 USD ≈ 3.900 COP. Comprueben la tasa del día; casas de cambio y bancos aplican márgenes.</div></div>
+ <div class="key-item"><span>🚕</span><div><b>Taxi desde el aeropuerto</b>El código base estima unos 20.000 COP hasta Getsemaní. Confirmen tarifa y destino antes de subir; puede variar por horario, zona y tarifa vigente.</div></div>
+ <div class="key-item"><span>🔌</span><div><b>Enchufes</b>Colombia utiliza principalmente tomas tipo A/B y 110–120 V. Perú también puede usar otros formatos/voltajes: revisen la etiqueta de sus cargadores y lleven adaptador si corresponde.</div></div>
+ <div class="key-item"><span>🛂</span><div><b>Check-Mig</b>Completen el formulario migratorio de Migración Colombia para cada viajero dentro del plazo oficial vigente. <a href="https://apps.migracioncolombia.gov.co/pre-registro/public/preregistro.jsf" target="_blank" rel="noopener">Abrir formulario ↗</a></div></div>
+ <div class="key-item"><span>🌞</span><div><b>Clima y cuidado</b>Marzo suele ser cálido y húmedo. Protector solar, agua, ropa ligera y caminatas temprano.</div></div>
+ <div class="key-item"><span>🆘</span><div><b>Emergencias</b>En Colombia, línea nacional 123. Para asistencia médica o policial, llamen al 123.</div></div>
+ </div></div></div>
+<div class="modal-backdrop" id="currencyModal"><div class="modal"><div class="modal-head"><h3>Frases útiles & moneda 💬</h3><button class="close" onclick="closeModal('currencyModal')">×</button></div><div class="key-list">
+ <div class="key-item"><span>👋</span><div><b>“¿Cuánto cuesta?”</b>¿Cuánto vale? · “¿Me puede dar el precio, por favor?”</div></div>
+ <div class="key-item"><span>🚕</span><div><b>“¿Cuánto cobra hasta Getsemaní?”</b>Confirmen el precio total antes de iniciar el trayecto.</div></div>
+ <div class="key-item"><span>💵</span><div><b>Pesos colombianos (COP)</b>Pregunten el precio en COP y calculen el equivalente en soles con la calculadora de Presupuesto.</div></div>
+ <div class="key-item"><span>🙏</span><div><b>“Gracias, muy amable”</b>Una sonrisa y un “por favor” siempre ayudan.</div></div>
+ </div><div class="btn-row"><button class="btn coral" onclick="closeModal('currencyModal');go('budget')">Abrir conversor</button></div></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const maps=q=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(q);
+const tik=q=>'https://www.tiktok.com/search?q='+encodeURIComponent(q);
+const search=q=>'https://www.google.com/search?q='+encodeURIComponent(q);
+const photo=(id)=>`https://images.unsplash.com/${id}?auto=format&fit=crop&w=1000&q=82`;
+const DAYS=[
+{name:'Mié 24',date:'24 MAR',items:[
+{time:'22:30',title:'Vuelo Cusco → Lima · JetSMART',desc:'Salida del último vuelo. Llegada estimada a Lima a las 23:55.',price:'S/ 350 p/p (ida y vuelta)',cop:'≈ 367.500 COP',place:'Aeropuerto Internacional Alejandro Velasco Astete',tip:'Comprar con anticipación. Verifiquen equipaje y hora límite de embarque.',photo:'photo-1436491865332-7a61a109cc05',query:'vuelo Cusco Lima JetSMART'},
+{time:'23:55',title:'Llegada a Lima y descanso',desc:'Toda la noche para descansar antes del vuelo internacional. Opción: cápsulas Sleepover o The Club.',price:'Por confirmar',place:'Aeropuerto Internacional Jorge Chávez, Lima',tip:'Revisen con anticipación ubicación, disponibilidad y acceso de las salas/cápsulas.',photo:'photo-1518509562904-e7ef99cdcc86'}]},
+{name:'Jue 25',date:'25 MAR',items:[
+{time:'05:25',title:'Check-in Copa 410',desc:'Vuelo Lima → Panamá. Salida 08:25 y llegada 12:16.',place:'Aeropuerto Internacional Jorge Chávez, Lima',tip:'Llegar con margen y tener documentos y reservas a mano.',photo:'photo-1436491865332-7a61a109cc05'},
+{time:'13:25',title:'Conexión Copa 304 · Panamá → Cartagena',desc:'Salida de PTY a las 13:25. Llegada estimada a Cartagena a las 14:35.',place:'Aeropuerto Internacional de Tocumen, Panamá',tip:'La conexión de ida es de 1 h 09 min. Confirmen puerta y equipaje en tránsito.',photo:'photo-1436491865332-7a61a109cc05'},
+{time:'15:45',title:'Check-in en Getsemaní',desc:'Traslado desde el aeropuerto y registro en el alojamiento elegido.',price:'Desde S/ 160/noche (hostal)',cop:'Desde ≈ 168.000 COP/noche',place:'Getsemaní, Cartagena de Indias',tip:'El código base estima taxi en ~20.000 COP. Confirmen tarifa antes de abordar.',photo:'photo-1518509562904-e7ef99cdcc86'},
+{time:'17:00',title:'Paseo por el Centro Amurallado',desc:'Torre del Reloj, Plaza de Santo Domingo y murallas. Primer paseo para ubicarse.',price:'Gratis',place:'Torre del Reloj, Cartagena',tip:'Caminen sin apuro, hidrát dense y guarden el atardecer para la muralla.',photo:'photo-1583531172005-814b5a7e2c7c'},
+{time:'Atardecer',title:'Café del Mar',desc:'Atardecer sobre las murallas. Un momento especial para los dos.',price:'Consumo libre',place:'Café del Mar, Cartagena',tip:'Lleguen con tiempo para encontrar un buen lugar y disfrutar la puesta de sol.',photo:'photo-1518509562904-e7ef99cdcc86'},
+{time:'Noche',title:'Cena en Getsemaní',desc:'Plaza de la Trinidad: ambiente local, música y opciones para comer.',price:'S/ 40–60 p/p',cop:'≈ 42.000–63.000 COP p/p',place:'Plaza de la Trinidad, Getsemaní, Cartagena',tip:'Ideal para pasear de la mano y probar algo típico. Consulten precios antes de ordenar.',photo:'photo-1517248135467-4c7edcad34c4'}]},
+{name:'Vie 26',date:'26 MAR',items:[
+{time:'08:00',title:'Tour Islas del Rosario',desc:'Día de snorkel, playa y almuerzo. Reservar con anticipación por temporada alta / Semana Santa.',price:'S/ 235 p/p (≈ US$65)',cop:'≈ 246.750 COP p/p',place:'Muelle turístico de Cartagena, Islas del Rosario',tip:'Confirmen muelle, tasas, almuerzo incluido, equipo, duración y política por clima. Protector solar y bolsa impermeable.',photo:'photo-1500375592092-40eb2168fd21',query:'Islas del Rosario Cartagena tour snorkel'},
+{time:'17:00',title:'Regreso y posibles procesiones',desc:'Vuelta al centro. El plan base contempla la posibilidad de procesiones del Viernes Santo; confirmar programación oficial 2027.',price:'Gratis',place:'Centro Histórico de Cartagena',tip:'La agenda religiosa puede variar. Revisen anuncios locales y descansen después del tour.',photo:'photo-1583531172005-814b5a7e2c7c'},
+{time:'Noche',title:'Cena tranquila',desc:'Cena y descanso en Getsemaní o el Centro.',price:'S/ 40–60 p/p',cop:'≈ 42.000–63.000 COP p/p',place:'Getsemaní, Cartagena',tip:'Una noche relajada para recuperar energía.',photo:'photo-1517248135467-4c7edcad34c4'}]},
+{name:'Sáb 27',date:'27 MAR',items:[
+{time:'08:30',title:'Castillo San Felipe de Barajas',desc:'Visita a la fortaleza histórica. Recorran túneles y miradores.',price:'S/ 72 p/p (≈ US$20)',cop:'≈ 75.600 COP p/p',place:'Castillo San Felipe de Barajas, Cartagena',tip:'Vayan temprano por el calor. Lleven agua, sombrero y calzado cómodo.',photo:'photo-1583531172005-814b5a7e2c7c',query:'Castillo San Felipe de Barajas Cartagena'},
+{time:'Mediodía',title:'Descanso o piscina',desc:'Regreso al alojamiento para recargar energía.',place:'Alojamiento en Getsemaní / Cartagena',tip:'Eviten sobrecargar el día; reserven energía para la tarde y noche.',photo:'photo-1571896349842-33c89424de2d'},
+{time:'Tarde',title:'Getsemaní: murales y compras',desc:'Arte urbano, callejones coloridos, artesanías y recuerdos.',price:'Variable',place:'Barrio Getsemaní, Cartagena',tip:'Ideal para fotos juntos. Pregunten antes de fotografiar a personas y comparen precios.',photo:'photo-1518509562904-e7ef99cdcc86',query:'Getsemani Cartagena street art murals'},
+{time:'Atardecer',title:'Paseo en velero por la bahía',desc:'Plan romántico de despedida con vistas de la ciudad desde el agua.',price:'S/ 90–145 p/p (≈ US$25–40)',cop:'≈ 94.500–152.250 COP p/p',place:'Bahía de Cartagena, Colombia',tip:'Confirmen duración, punto de salida, bebidas, cena y condiciones de cancelación.',photo:'photo-1500530855697-b586d89ba3ee',query:'Cartagena Colombia sunset sailing boat'},
+{time:'Noche',title:'Dormir temprano',desc:'Dejar maletas listas y descansar: el domingo toca levantarse muy temprano.',place:'Alojamiento en Cartagena',tip:'Dejen documentos, ropa y transporte preparados antes de dormir.',photo:'photo-1505693416388-ac5ce068fe85'}]},
+{name:'Dom 28',date:'28 MAR',items:[
+{time:'04:30',title:'Taxi al aeropuerto',desc:'Salida hacia el aeropuerto. Llegada estimada 05:20 para el vuelo Copa 160 de las 08:20.',price:'S/ 72 (≈ US$20)',cop:'≈ 75.600 COP',place:'Aeropuerto Internacional Rafael Núñez, Cartagena',tip:'Confirmen tarifa, tiempo de traslado y hora recomendada de presentación con Copa.',photo:'photo-1512453979798-5ea266f8880c'},
+{time:'08:20',title:'Copa 160 · Cartagena → Panamá',desc:'Llegada a PTY a las 09:38. Escala de 4 h 43 min.',place:'Aeropuerto Internacional Rafael Núñez, Cartagena',tip:'Revisen pantallas y puerta de embarque al llegar a Panamá.',photo:'photo-1436491865332-7a61a109cc05'},
+{time:'14:21',title:'Copa 661 · Panamá → Lima',desc:'Salida 14:21 y llegada a Lima a las 18:00.',place:'Aeropuerto Internacional de Tocumen, Panamá',tip:'Al aterrizar en Lima, recojan equipaje si corresponde y ubiquen la conexión nacional.',photo:'photo-1436491865332-7a61a109cc05'},
+{time:'20:00',title:'Vuelo Lima → Cusco · JetSMART',desc:'Regreso a casa. Llegada estimada a las 21:25.',price:'S/ 350 p/p (ida y vuelta)',place:'Aeropuerto Internacional Jorge Chávez, Lima',tip:'Comprar este tramo con suficiente margen respecto al vuelo internacional y verificar terminal/equipaje.',photo:'photo-1436491865332-7a61a109cc05'}]}
+];
+// Foto fallback para evento sin imagen asignada.
+const IMG={getse:'photo-1518509562904-e7ef99cdcc86'};
+function renderDays(){ $('dayTabs').innerHTML=DAYS.map((d,i)=>`<button class="day-tab ${i===1?'active':''}" data-day="${i}">${d.name}<small>${d.date}</small></button>`).join('');$('dayTabs').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>renderDay(+b.dataset.day)));renderDay(1)}
+function renderDay(index){$('dayTabs').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('active',i===index));const day=DAYS[index];$('itinerary').innerHTML=`<div class="card"><h3>${day.name} · ${day.date}</h3><p class="small">${day.items.length} momentos en el plan. Toca una tarjeta para desplegar detalles.</p></div><div class="timeline">${day.items.map((it,i)=>{const p=it.photo&&it.photo!=='photo-1518509562904-e7ef99cdcc86'?photo(it.photo):photo('photo-1436491865332-7a61a109cc05');const price=it.price?`<span class="price-chip">${esc(it.price)}</span>`:'';return `<details class="event" ${i===0?'':''}><summary><div class="event-card"><div class="event-head"><div><div class="event-time">${esc(it.time)}</div><div class="event-title">${esc(it.title)}</div></div><span class="chevron">⌄</span></div><div class="event-desc">${esc(it.desc)}</div>${price}</div></summary><div class="event-card event-extra"><img class="event-photo" loading="lazy" src="${p}" alt="Imagen de referencia: ${esc(it.title)}" onerror="this.style.display='none'"><div class="small"><b>📍 Lugar:</b> ${esc(it.place||it.title)}</div>${it.cop?`<div class="small" style="margin-top:5px"><b>Conversión orientativa:</b> ${esc(it.cop)}</div>`:''}<div class="tip">♡ Tip para dos: ${esc(it.tip||'Disfruten el momento y confirmen horarios antes de salir.')}</div><div class="event-actions"><a class="btn" href="${maps(it.place||it.title)}" target="_blank" rel="noopener">↗ Cómo llegar</a><a class="btn secondary" href="${tik(it.query||it.title+' Cartagena Colombia')} " target="_blank" rel="noopener">▶ Ver en TikTok</a><button class="btn secondary" onclick="shareRide('${esc(it.place||it.title).replace(/'/g,'&#39;')}')">Uber / InDrive</button></div></div></details>`}).join('')}</div>`}
+function shareRide(place){const text='Destino: '+place+' · Cartagena';if(navigator.share)navigator.share({title:'Trayecto',text});else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Destino copiado. Pégalo en Uber o InDrive.'));else alert(text)}
+const flights=[
+{air:'COPA 410',date:'Jue 25 mar · Ida',from:'LIM',fromName:'Lima',to:'PTY',toName:'Panamá',depart:'08:25',arrive:'12:16',status:'Pagado · Copa',paid:true,ref:''},
+{air:'COPA 304',date:'Jue 25 mar · Ida',from:'PTY',fromName:'Panamá',to:'CTG',toName:'Cartagena',depart:'13:25',arrive:'14:35',status:'Pagado · Copa',paid:true,ref:''},
+{air:'COPA 160',date:'Dom 28 mar · Vuelta',from:'CTG',fromName:'Cartagena',to:'PTY',toName:'Panamá',depart:'08:20',arrive:'09:38',status:'Pagado · Copa',paid:true,ref:''},
+{air:'COPA 661',date:'Dom 28 mar · Vuelta',from:'PTY',fromName:'Panamá',to:'LIM',toName:'Lima',depart:'14:21',arrive:'18:00',status:'Pagado · Copa',paid:true,ref:''},
+{air:'JetSMART · por comprar',date:'Mié 24 mar · Ida',from:'CUZ',fromName:'Cusco',to:'LIM',toName:'Lima',depart:'22:30',arrive:'23:55',status:'Falta comprar',paid:false,ref:''},
+{air:'JetSMART · por comprar',date:'Dom 28 mar · Vuelta',from:'LIM',fromName:'Lima',to:'CUZ',toName:'Cusco',depart:'20:00',arrive:'21:25',status:'Falta comprar',paid:false,ref:''}
+];
+function renderFlights(){$('flightList').innerHTML=flights.map((f,i)=>`<div class="card flight-card"><div class="flight-top"><div><div class="airline">${f.air}</div><div class="small">${f.date}</div></div><span class="status ${f.paid?'':'pending'}">${f.status}</span></div><div class="flight-route"><div class="airport"><div class="iata">${f.from}</div><div class="airport-name">${f.fromName}</div><div class="flight-time">${f.depart}</div></div><div class="flight-arrow">✈<small>${f.from==='LIM'&&f.to==='PTY'?'3 h 51 min':f.from==='PTY'&&f.to==='CTG'?'1 h 10 min':f.from==='CTG'?'1 h 18 min':f.from==='PTY'?'3 h 39 min':'1 h 25 min'}</small></div><div class="airport"><div class="iata">${f.to}</div><div class="airport-name">${f.toName}</div><div class="flight-time">${f.arrive}</div></div></div><div class="flight-bottom"><div class="small">${f.paid?'Reserva Copa: no consignada':'Compra pendiente · JetSMART'}</div><div class="flight-actions"><button class="mini-btn" onclick="copyFlight(${i})">Copiar</button>${f.paid?'<a class="mini-btn" href="https://www.copaair.com/es-pe/" target="_blank" rel="noopener">Check-in</a>':'<a class="mini-btn" href="https://www.jetsmart.com/pe/es/" target="_blank" rel="noopener">Comprar</a>'}</div></div></div>`).join('')}
+function copyFlight(i){const f=flights[i],s=`${f.air} | ${f.date} | ${f.from} ${f.depart} → ${f.to} ${f.arrive}`;navigator.clipboard?.writeText(s).then(()=>alert('Datos del vuelo copiados.'))||alert(s)}
+const TIERS=[
+{name:'💸 Económico',hotel:'Hostal privado en Getsemaní',hotelPrice:'S/ 160–250/noche',hotelLink:'https://www.google.com/maps/search/?api=1&query=Media+Luna+Hostel+Cartagena',tour:'Playa Blanca en lancha',tourPrice:'S/ 110–160 p/p',tourLink:'https://www.google.com/search?q=tour+Playa+Blanca+Cartagena+precio',food:'Comida callejera y menús',foodPrice:'S/ 50–70 p/p/día',h:200,f:60,t:135},
+{name:'⭐ Regular',hotel:'Airbnb o hotel boutique 3–4★',hotelPrice:'S/ 320–500/noche',hotelLink:'https://www.google.com/maps/search/?api=1&query=Movich+Hotel+Cartagena',tour:'Catamarán Islas del Rosario',tourPrice:'S/ 235–250 p/p',tourLink:'https://www.civitatis.com/es/cartagena-de-indias/excursion-islas-rosario/',food:'Restaurantes locales y cafés',foodPrice:'S/ 100–140 p/p/día',h:400,f:120,t:240},
+{name:'💎 Premium',hotel:'Hotel de lujo en el Centro Histórico',hotelPrice:'S/ 900–1.600+/noche',hotelLink:'https://www.google.com/maps/search/?api=1&query=Sofitel+Legend+Santa+Clara+Cartagena',tour:'Lancha privada o beach club',tourPrice:'S/ 340+ p/p',tourLink:'https://www.google.com/search?q=lancha+privada+Islas+del+Rosario+Cartagena',food:'Alta cocina y coctelería',foodPrice:'S/ 250–300 p/p/día',h:1000,f:275,t:400}
+];let tier=1;
+function renderBudget(){const t=TIERS[tier];document.querySelectorAll('.tier-btn').forEach(b=>b.classList.toggle('active',+b.dataset.tier===tier));$('planDetails').innerHTML=`<div class="plan-row"><div><b>🛏️ Alojamiento</b><div class="small">${t.hotel}</div></div><strong>${t.hotelPrice}<br><a href="${t.hotelLink}" target="_blank" rel="noopener" style="font-size:9px">Buscar opciones ↗</a></strong></div><div class="plan-row"><div><b>🏝️ Tour principal</b><div class="small">${t.tour}</div></div><strong>${t.tourPrice}<br><a href="${t.tourLink}" target="_blank" rel="noopener" style="font-size:9px">Ver tour ↗</a></strong></div><div class="plan-row"><div><b>🍽️ Comida estimada</b><div class="small">${t.food}</div></div><strong>${t.foodPrice}</strong></div>`;
+const hotel=t.h*3,food=t.f*2*4,tour=t.t*2,transport=150,total=hotel+food+tour+transport;const vals=[['Alojamiento',hotel],['Tours',tour],['Comida',food],['Transporte local',transport]];$('budgetTotal').innerHTML=`<div class="total-panel"><div class="label">Total estimado para Alli & Wali</div><div class="total-number">S/ ${total.toLocaleString('es-PE')}</div><div class="total-sub">≈ S/ ${Math.round(total/2).toLocaleString('es-PE')} por persona · 2 viajeros</div></div>`;$('budgetBars').innerHTML=vals.map(([n,v])=>`<div class="bar-item"><div class="bar-head"><b>${n}</b><span>S/ ${v.toLocaleString('es-PE')}</span></div><div class="bar"><i style="width:${v/total*100}%"></i></div></div>`).join('')}
+const baseTasks=[
+['Hoy','Alli y Wali: guardar voucher de Copa en el celular y en papel'],
+['27 nov – 1 dic','Comprar Cusco–Lima (mié 24) y Lima–Cusco (dom 28) en JetSMART'],
+['Dic – ene','Reservar hotel en Lima (cápsulas Sleepover) y alojamiento en Cartagena'],
+['Feb','Reservar tour de islas; consultar vacuna de fiebre amarilla'],
+['Mar 21–23','Check-Mig de Alli y Wali y seguro de viaje; pesos en efectivo'],
+['Mié 24 mar','Web check-in de JetSMART y Copa 410'],
+['Jue 25 mar','Alli y Wali en el aeropuerto de Lima a las 05:25']
+];
+const TASK_KEY='alliWaliCartagenaTasksV1';
+function getTasks(){try{const saved=JSON.parse(localStorage.getItem(TASK_KEY));if(saved)return saved}catch(e){}return baseTasks.map((x,i)=>({id:'base'+i,group:x[0],text:x[1],done:false,link:''}))}
+let tasks=getTasks();
+function saveTasks(){try{localStorage.setItem(TASK_KEY,JSON.stringify(tasks))}catch(e){}}
+function renderTasks(){const groups=[...new Set([...baseTasks.map(x=>x[0]),'Notas personales',...tasks.map(t=>t.group)])];$('checklist').innerHTML=groups.map(g=>{const items=tasks.filter(t=>t.group===g);if(!items.length)return '';return `<div class="group-title">${esc(g)}</div><div class="card">${items.map(t=>`<div class="task ${t.done?'done':''}"><input type="checkbox" ${t.done?'checked':''} aria-label="Completar tarea" onchange="toggleTask('${t.id}')"><span style="flex:1">${esc(t.text)}${t.link?`<br><a href="${esc(t.link)}" target="_blank" rel="noopener">Abrir enlace ↗</a>`:''}</span>${t.id.startsWith('custom')?`<button class="mini-btn" onclick="removeTask('${t.id}')" aria-label="Eliminar">×</button>`:''}</div>`).join('')}</div>`}).join('');const done=tasks.filter(t=>t.done).length,pct=tasks.length?Math.round(done/tasks.length*100):0;$('progressText').textContent=pct+'%';$('progressBar').style.width=pct+'%';$('progressSub').textContent=`${done} de ${tasks.length} tareas completadas`}
+function toggleTask(id){tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);saveTasks();renderTasks()}
+function removeTask(id){tasks=tasks.filter(t=>t.id!==id);saveTasks();renderTasks()}
+$('addTaskForm').addEventListener('submit',e=>{e.preventDefault();const text=$('newTask').value.trim(),link=$('newLink').value.trim();if(!text)return;tasks.push({id:'custom'+Date.now(),group:$('newGroup').value,text,link,done:false});saveTasks();e.target.reset();renderTasks()});
+function go(view){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+view));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav-btn').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
+$('tierTabs').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{tier=+b.dataset.tier;renderBudget()}));
+function openModal(id){$(id).classList.add('open')}function closeModal(id){$(id).classList.remove('open')}
+$('keyOpen').addEventListener('click',()=>openModal('keyModal'));
+document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+$('themeToggle').addEventListener('click',()=>{const d=document.documentElement,now=d.dataset.theme==='dark'?'light':'dark';d.dataset.theme=now;localStorage.setItem('alliTheme',now);$('themeToggle').textContent=now==='dark'?'☀':'☾'});
+(function(){const t=localStorage.getItem('alliTheme');if(t){document.documentElement.dataset.theme=t;$('themeToggle').textContent=t==='dark'?'☀':'☾'}})();
+function countdown(){const target=new Date('2027-03-24T22:30:00-05:00').getTime(),diff=Math.max(0,target-Date.now());$('cd').textContent=Math.floor(diff/86400000);$('ch').textContent=Math.floor(diff%86400000/3600000);$('cm').textContent=Math.floor(diff%3600000/60000);$('cs').textContent=Math.floor(diff%60000/1000)}
+countdown();setInterval(countdown,1000);
+// Tipos de cambio: tasas online vía Frankfurter cuando disponible; valores base aproximados si no hay conexión.
+let rates={PEN:1,COP:1050,USD:0.265};let live=false;
+function convert(){const amount=Number($('amount').value)||0,from=$('fromCurrency').value,to=$('toCurrency').value;const value=amount/rates[from]*rates[to];$('converted').textContent=value.toLocaleString('es-PE',{maximumFractionDigits:2})+' '+to}
+async function updateRates(){ $('rateNote').textContent='Consultando tasas…';try{const r=await fetch('https://api.frankfurter.dev/v1/latest?base=PEN&symbols=COP,USD',{cache:'no-store'});if(!r.ok)throw Error();const d=await r.json();rates={PEN:1,COP:d.rates.COP,USD:d.rates.USD};live=true;$('rateNote').textContent=`Tasa consultada: ${d.date}. 1 PEN = ${rates.COP.toFixed(2)} COP · 1 PEN = ${rates.USD.toFixed(4)} USD. Referencia; el cambio efectivo puede variar.`}catch(e){live=false;$('rateNote').textContent='Sin conexión: se usan valores orientativos editables (1 PEN ≈ 1.050 COP; 1 PEN ≈ 0,265 USD).'}convert()}
+['amount','fromCurrency','toCurrency'].forEach(id=>$(id).addEventListener('input',convert));$('refreshRates').addEventListener('click',updateRates);
+renderFlights();renderDays();renderBudget();renderTasks();updateRates();
+</script>
+</body></html>
