@@ -1,0 +1,1616 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Cartagena 2027 · Agencia de viajes futurista</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0a0e17;
+      --surface: #121826;
+      --surface2: #1a2332;
+      --glass: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --text: #e8edf5;
+      --text-dim: #8899b0;
+      --accent: #00e5ff;
+      --accent2: #7c3aed;
+      --accent3: #f472b6;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --danger: #f87171;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+      --glow: 0 0 24px rgba(0, 229, 255, 0.25);
+      --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
+    }
+
+    /* ===== FONDO FUTURISTA ===== */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0, 229, 255, 0.08), transparent),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(124, 58, 237, 0.08), transparent),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(244, 114, 182, 0.04), transparent);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 30%, transparent 80%);
+      pointer-events: none;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      text-align: center;
+      padding: calc(48px + var(--safe-top)) 20px 40px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      translate: -50% 0;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 229, 255, 0.15), transparent 70%);
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      position: relative;
+      z-index: 1;
+      animation: gradientShift 6s ease infinite;
+      background-size: 200% 200%;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .hero .sub {
+      font-size: clamp(0.85rem, 2.5vw, 1.05rem);
+      color: var(--text-dim);
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 0.02em;
+    }
+
+    .hero .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+      padding: 6px 18px;
+      border-radius: 99px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      font-size: 0.8rem;
+      color: var(--accent);
+      backdrop-filter: blur(12px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.5); }
+      50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(0, 229, 255, 0); }
+    }
+
+    /* ===== NAV ===== */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 10px 16px;
+      background: rgba(10, 14, 23, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      scrollbar-width: none;
+    }
+
+    nav::-webkit-scrollbar { display: none; }
+
+    nav a {
+      white-space: nowrap;
+      text-decoration: none;
+      color: var(--text-dim);
+      padding: 8px 18px;
+      border-radius: 99px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 0.02em;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--accent);
+      background: rgba(0, 229, 255, 0.08);
+      border-color: rgba(0, 229, 255, 0.25);
+    }
+
+    /* ===== MAIN ===== */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 16px 80px;
+    }
+
+    section {
+      margin: 48px 0;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2 .icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(124, 58, 237, 0.15));
+      border: 1px solid var(--glass-border);
+      font-size: 1.2rem;
+    }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 16px 0 8px;
+      color: var(--accent);
+      letter-spacing: 0.02em;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 12px 0;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      border-color: rgba(0, 229, 255, 0.2);
+      box-shadow: var(--glow);
+      transform: translateY(-2px);
+    }
+
+    .card-glass {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 12px 0;
+      backdrop-filter: blur(20px);
+    }
+
+    /* ===== GRIDS ===== */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 700px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    /* ===== STATS ===== */
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .stat:hover {
+      border-color: rgba(0, 229, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
+    }
+
+    .stat small {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+    }
+
+    .stat b {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ===== FLIGHT TICKETS ===== */
+    .ticket {
+      background: var(--surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin: 12px 0;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .ticket::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+    }
+
+    .ticket:hover {
+      border-color: rgba(0, 229, 255, 0.25);
+      box-shadow: var(--glow);
+    }
+
+    .ticket .route {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .ticket .route > div:last-child { text-align: right; }
+
+    .ticket .route b {
+      font-size: 1.6rem;
+      font-weight: 700;
+      display: block;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .ticket .route small {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .ticket .arrow {
+      text-align: center;
+      color: var(--accent);
+      font-size: 1.4rem;
+      position: relative;
+    }
+
+    .ticket .arrow small {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+
+    .ticket .tp {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+
+    .ticket.pending { border-left-color: var(--warn); }
+    .ticket.pending::before { background: linear-gradient(180deg, var(--warn), var(--accent3)); }
+
+    /* ===== CHECK MESSAGES ===== */
+    .check {
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      margin: 6px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.5;
+      border: 1px solid transparent;
+    }
+
+    .check.ok {
+      background: rgba(52, 211, 153, 0.08);
+      border-color: rgba(52, 211, 153, 0.2);
+      color: var(--ok);
+    }
+
+    .check.warn {
+      background: rgba(251, 191, 36, 0.08);
+      border-color: rgba(251, 191, 36, 0.2);
+      color: var(--warn);
+    }
+
+    .check.danger {
+      background: rgba(248, 113, 113, 0.08);
+      border-color: rgba(248, 113, 113, 0.2);
+      color: var(--danger);
+    }
+
+    .check .check-icon { flex-shrink: 0; font-size: 1rem; }
+
+    /* ===== CONTROLS ===== */
+    button, select, input {
+      font: inherit;
+      color: var(--text);
+      outline: none;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--glass-border);
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.25s;
+      letter-spacing: 0.02em;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 16px rgba(0, 229, 255, 0.15);
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    button.primary:hover {
+      box-shadow: 0 0 28px rgba(0, 229, 255, 0.35);
+      transform: translateY(-1px);
+    }
+
+    select, input[type="number"], input[type="time"] {
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border);
+      background: var(--surface2);
+      font-size: 0.85rem;
+      transition: border-color 0.25s;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+    }
+
+    input[type="number"] { width: 90px; }
+    input[type="time"] { width: 110px; }
+
+    /* ===== RANGE ===== */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 99px;
+      background: var(--surface2);
+      border: none;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+      border: 2px solid #fff;
+      transition: transform 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    /* ===== DETAILS ===== */
+    details {
+      margin: 8px 0;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 10px 0;
+      color: var(--accent);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+    summary::before {
+      content: '▸';
+      transition: transform 0.25s;
+      font-size: 0.8rem;
+    }
+    details[open] summary::before { transform: rotate(90deg); }
+
+    /* ===== FIELD ROWS ===== */
+    .field {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px dashed rgba(255, 255, 255, 0.06);
+      font-size: 0.85rem;
+    }
+
+    .field:first-of-type { border-top: none; }
+
+    .field label {
+      color: var(--text-dim);
+      flex: 1;
+    }
+
+    /* ===== MAP ===== */
+    #map {
+      width: 100%;
+      max-height: 480px;
+      background: #0d1420;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--glass-border);
+    }
+
+    #map path, #map circle, #map text {
+      transition: all 0.3s;
+    }
+
+    /* ===== TIMELINE / GANTT ===== */
+    .gantt {
+      position: relative;
+      height: 32px;
+      background: var(--surface2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 6px 0 12px;
+      border: 1px solid var(--glass-border);
+    }
+
+    .gantt i {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      font: normal 0.68rem/32px var(--font);
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.03em;
+      transition: filter 0.2s;
+    }
+
+    .gantt i:hover { filter: brightness(1.3); }
+
+    .date-labels {
+      position: relative;
+      height: 20px;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .date-labels span {
+      position: absolute;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      padding-left: 4px;
+      white-space: nowrap;
+    }
+
+    .current-marker {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      z-index: 3;
+      box-shadow: 0 0 8px var(--accent);
+      transition: left 0.15s linear;
+    }
+
+    /* ===== MONTH CALENDAR ===== */
+    .month {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+      font-size: 0.82rem;
+      margin-top: 12px;
+    }
+
+    .month div {
+      padding: 8px 0;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .month .hd {
+      font-weight: 700;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .month .trip {
+      border-color: var(--accent);
+      background: rgba(0, 229, 255, 0.1);
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .month .holiday {
+      outline: 2px solid var(--accent2);
+      outline-offset: -2px;
+    }
+
+    /* ===== TIER SELECTOR ===== */
+    .tier-selector {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .tier-selector button {
+      padding: 16px 8px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      border: 2px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tier-selector button::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(124, 58, 237, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tier-selector button:hover::before { opacity: 1; }
+
+    .tier-selector button.on {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.12), rgba(124, 58, 237, 0.12));
+      color: var(--accent);
+      box-shadow: var(--glow);
+    }
+
+    /* ===== ITEM LISTS ===== */
+    .item {
+      padding: 12px 0;
+      border-top: 1px dashed rgba(255, 255, 255, 0.06);
+      font-size: 0.88rem;
+      transition: background 0.2s;
+    }
+
+    .item:first-child { border-top: none; }
+
+    .item a {
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .item a:hover { color: var(--accent3); }
+
+    .item .price {
+      float: right;
+      font-weight: 700;
+      color: var(--accent3);
+      margin-left: 8px;
+      font-size: 0.85rem;
+    }
+
+    .item .note {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ===== TABS ===== */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .tabs button {
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      border-radius: 99px;
+      border: 1px solid var(--glass-border);
+      background: transparent;
+      color: var(--text-dim);
+    }
+
+    .tabs button.on {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ===== SCHEDULE LIST ===== */
+    .schedule-item {
+      display: flex;
+      gap: 14px;
+      padding: 10px 0;
+      border-top: 1px dashed rgba(255, 255, 255, 0.06);
+      font-size: 0.88rem;
+      align-items: flex-start;
+    }
+
+    .schedule-item:first-child { border-top: none; }
+
+    .schedule-item .time {
+      min-width: 64px;
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-variant-numeric: tabular-nums;
+      padding-top: 2px;
+    }
+
+    /* ===== CHECKLIST ===== */
+    .checklist label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-top: 1px dashed rgba(255, 255, 255, 0.06);
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .checklist label:first-child { border-top: none; }
+
+    .checklist input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      margin-top: 2px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .checklist label.done {
+      opacity: 0.45;
+      text-decoration: line-through;
+    }
+
+    /* ===== TABLE ===== */
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.85rem;
+    }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    td input {
+      width: 100%;
+      max-width: 120px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+    }
+
+    /* ===== TOTAL ===== */
+    .total-box {
+      background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(124, 58, 237, 0.08));
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .total-box .big {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .total-box .per-person {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* ===== NOTE ===== */
+    .note {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ===== PAST ===== */
+    .past { opacity: 0.4; text-decoration: line-through; }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .animate-in {
+      animation: slideIn 0.4s ease both;
+    }
+
+    /* ===== RESPONSIVE TWEAKS ===== */
+    @media (max-width: 500px) {
+      .ticket .route b { font-size: 1.3rem; }
+      .hero { padding-top: calc(32px + var(--safe-top)); }
+      main { padding: 12px 10px 60px; }
+      .card { padding: 14px; }
+      .stat b { font-size: 1.1rem; }
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
+
+    /* ===== TOOLTIP ===== */
+    [data-tip] {
+      position: relative;
+    }
+
+    [data-tip]:hover::after {
+      content: attr(data-tip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      translate: -50% 0;
+      background: var(--surface2);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      white-space: nowrap;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      z-index: 50;
+      pointer-events: none;
+      animation: fadeUp 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero">
+    <h1>🏖️ Cartagena 2027</h1>
+    <p class="sub">Vuelos Copa confirmados · Jue 25 → Dom 28 de marzo · desde Cusco</p>
+    <div class="badge">Agencia de viajes futurista · Para dos</div>
+  </header>
+
+  <!-- ===== NAV ===== -->
+  <nav id="nav">
+    <a href="#vuelos" class="active">✈️ Vuelos</a>
+    <a href="#mapa">🌎 Ruta</a>
+    <a href="#estilo">💎 Estilo</a>
+    <a href="#plan">🗺️ Itinerario</a>
+    <a href="#costo">💰 Costo</a>
+    <a href="#todo">✅ Pendientes</a>
+  </nav>
+
+  <main>
+
+    <!-- ===== VUELOS ===== -->
+    <section id="vuelos">
+      <h2><span class="icon">✈️</span> Vuelos confirmados y por comprar</h2>
+      <p class="note" style="margin-bottom:16px;">Los 4 vuelos de Copa ya están pagados. Los dos boletos con borde naranja (Cusco–Lima y Lima–Cusco) aún no: cambia sus horas para simular. Todas las horas son de Lima; Panamá y Cartagena tienen la misma hora.</p>
+
+      <div class="grid-3" style="margin-bottom:20px;">
+        <div class="stat"><small>Cusco → Lima (mié): salir desde</small><b id="k1">—</b></div>
+        <div class="stat"><small>Lima → Cusco (dom): salir desde</small><b id="k2">—</b></div>
+        <div class="stat"><small>Para llegar a Cusco a tu límite, salir hasta</small><b id="k3">—</b></div>
+      </div>
+
+      <!-- Vuelo pendiente ida -->
+      <div class="ticket pending">
+        <div class="tp">Falta comprar · Mié 24 mar · Cusco → Lima</div>
+        <div class="route">
+          <div><b>CUZ</b><input id="cu" type="time" value="18:30" onchange="go()"></div>
+          <div class="arrow">✈<small id="d1">—</small></div>
+          <div><b>LIM</b><span id="a1">—</span></div>
+        </div>
+      </div>
+      <div id="c0" class="check"></div>
+      <div id="c1" class="check"></div>
+
+      <div id="fi"></div>
+
+      <!-- Vuelo pendiente vuelta -->
+      <div class="ticket pending">
+        <div class="tp">Falta comprar · Dom 28 mar · Lima → Cusco</div>
+        <div class="route">
+          <div><b>LIM</b><input id="lct" type="time" value="20:45" onchange="go()"></div>
+          <div class="arrow">✈<small id="d4">—</small></div>
+          <div><b>CUZ</b><span id="a4">—</span></div>
+        </div>
+      </div>
+      <div id="c3" class="check"></div>
+      <div id="c4" class="check"></div>
+
+      <!-- Supuestos -->
+      <details class="card">
+        <summary>⚙️ Supuestos que puedes cambiar</summary>
+        <div class="field"><label>Salgo del trabajo</label><input id="wk" type="time" value="16:00" onchange="go()"></div>
+        <div class="field"><label>Traslado al aeropuerto de Cusco (min)</label><input id="tr" type="number" value="30" onchange="go()"></div>
+        <div class="field"><label>Llegar antes del vuelo nacional (min)</label><input id="ci" type="number" value="60" onchange="go()"></div>
+        <div class="field"><label>Duración Cusco–Lima (min)</label><input id="cd" type="number" value="85" onchange="go()"></div>
+        <div class="field"><label>Margen mínimo tras aterrizar en Lima, con maleta (min)</label><input id="b2" type="number" value="150" onchange="go()"></div>
+        <div class="field"><label>Llegar a Cusco el domingo, máx.</label><input id="lim" type="time" value="22:00" onchange="go()"></div>
+      </details>
+
+      <div class="card">
+        <b>📋 Datos de tu reserva</b><br>
+        <span class="note">Copa recomienda llegar 3 horas antes. Cambiar un tramo cuesta US$ 75 por persona más la diferencia de tarifa; el pasaje no es reembolsable. Cada pasajero tiene 1 maleta incluida.</span>
+      </div>
+    </section>
+
+    <!-- ===== MAPA ===== -->
+    <section id="mapa">
+      <h2><span class="icon">🌎</span> Tu recorrido</h2>
+      <div class="card">
+        <svg id="map" viewBox="0 0 550 700" role="img" aria-label="Mapa de la ruta"></svg>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:16px 0;">
+          <button id="pb" class="primary" onclick="play()">▶ Reproducir</button>
+          <input id="sc" type="range" min="16" max="122" step="0.25" value="16" style="flex:1;min-width:160px;" oninput="upd()">
+          <b id="tm" style="font-variant-numeric:tabular-nums;font-size:0.85rem;color:var(--accent);">—</b>
+        </div>
+        <div id="st" style="font-size:1rem;font-weight:600;margin:8px 0;color:var(--accent);">—</div>
+        <div class="date-labels" id="dl"></div>
+        <div class="gantt" id="gt"></div>
+        <p class="note" style="margin-top:8px;">🟣 Gris oscuro: vuelo · ⚪ Gris claro: espera · 🟠 Naranja: en Cartagena.</p>
+        <div class="month" id="mo"></div>
+        <p class="note" style="margin-top:8px;">Borde negro: días del viaje · azul: feriado en Perú (25 y 26) · domingo 28: Pascua.</p>
+      </div>
+    </section>
+
+    <!-- ===== ESTILO ===== -->
+    <section id="estilo">
+      <h2><span class="icon">💎</span> Elige tu estilo en Cartagena</h2>
+      <p class="note" style="margin-bottom:16px;">Cada estilo cambia dónde duermen, qué tours hacen, dónde comen y el costo total. Los precios son estimados míos (algunos tomados de listas de agencias de otras fechas) y en Semana Santa suben. Los links abren búsquedas o páginas de reserva.</p>
+      <div class="tier-selector" id="tier"></div>
+      <div class="grid-2" id="tp"></div>
+    </section>
+
+    <!-- ===== PLAN ===== -->
+    <section id="plan">
+      <h2><span class="icon">🗺️</span> Itinerario día por día</h2>
+      <div class="card">
+        <div class="tabs" id="tabs"></div>
+        <div id="it"></div>
+      </div>
+    </section>
+
+    <!-- ===== COSTO ===== -->
+    <section id="costo">
+      <h2><span class="icon">💰</span> Costo estimado para dos</h2>
+      <div class="card">
+        <div class="field"><label>Soles por dólar (editable)</label><input type="number" step="0.05" id="fx" value="3.6" oninput="bud()"></div>
+        <div class="field"><label>Noches en Cartagena</label><input type="number" id="nn" value="3" oninput="bud()"></div>
+        <div class="field"><label>Hotel en Lima la noche del miércoles, habitación para 2 (US$)</label><input type="number" id="hl" value="60" oninput="bud()"></div>
+        <div class="field"><label>Cusco–Lima ida y vuelta por persona (S/)</label><input type="number" id="cl" value="350" oninput="bud()"></div>
+        <div class="table-wrap"><table id="bt"></table></div>
+        <div class="total-box">
+          <div class="big" id="tot">—</div>
+        </div>
+        <p class="note" style="margin-top:12px;">Los vuelos de Copa ya están pagados con puntos. Para las tasas reales, revisa tu comprobante.</p>
+      </div>
+    </section>
+
+    <!-- ===== PENDIENTES ===== -->
+    <section id="todo">
+      <h2><span class="icon">✅</span> Pendientes y cyber</h2>
+      <div class="card">
+        <div id="ck" class="checklist"></div>
+        <h3>📅 Fechas de cyber</h3>
+        <div id="cy"></div>
+        <p class="note" style="margin-top:12px;">El Cyber Wow de noviembre ya pasó. Las promos de las aerolíneas no están confirmadas: revísalas en sus webs. Compara: <a target="_blank" rel="noopener" id="f1" style="color:var(--accent);">Cusco–Lima 24 mar</a> · <a target="_blank" rel="noopener" id="f2" style="color:var(--accent);">Lima–Cusco 28 mar</a> · <a target="_blank" rel="noopener" id="f3" style="color:var(--accent);">Lima–Cartagena 25 mar</a>.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // ============================================================
+    //  UTILIDADES
+    // ============================================================
+    const $ = id => document.getElementById(id);
+    const DN = ['Mié','Jue','Vie','Sáb','Dom','Lun'];
+
+    const hh = h => {
+      const d = Math.floor(h / 24);
+      const m = Math.round((h - d * 24) * 60);
+      const H = Math.floor(m / 60);
+      return DN[d] + ' ' + (24 + d) + ' · ' + ('0'+H).slice(-2) + ':' + ('0'+(m%60)).slice(-2);
+    };
+
+    const tm = h => {
+      const m = Math.round(h * 60);
+      return Math.floor(m / 60) + ' h ' + ('0' + m % 60).slice(-2) + ' min';
+    };
+
+    const tv = id => {
+      const v = $(id).value.split(':');
+      return +v[0] + v[1] / 60;
+    };
+
+    // ============================================================
+    //  CONSTANTES DE VUELO
+    // ============================================================
+    const T1 = 32 + 25/60, T2 = 36 + 16/60, T3 = 37 + 25/60, T4 = 38 + 35/60;
+    const R1 = 104 + 20/60, R2 = 105 + 38/60, R3 = 110 + 21/60, R4 = 114;
+
+    let P = null;
+
+    // ============================================================
+    //  CÁLCULO DE VUELOS
+    // ============================================================
+    function calc() {
+      const p = {};
+      p.ec = tv('wk') + $('tr').value / 60 + $('ci').value / 60;
+      p.cd = $('cd').value / 60;
+      p.b2 = $('b2').value / 60;
+      p.lim = 96 + tv('lim');
+      p.cu = tv('cu');
+      p.lc = 96 + tv('lct');
+      p.cua = p.cu + p.cd;
+      p.lca = p.lc + p.cd;
+      return p;
+    }
+
+    const ck2 = h => hh(h).split(' · ')[1];
+
+    function setCheck(id, ok, text) {
+      const el = $(id);
+      el.className = 'check ' + (ok ? 'ok' : 'danger');
+      el.innerHTML = '<span class="check-icon">' + (ok ? '✅' : '⚠️') + '</span><span>' + text + '</span>';
+    }
+
+    function go() {
+      const p = P = calc();
+      const mn = R4 + p.b2;
+      const mx = p.lim - p.cd;
+
+      $('k1').textContent = ck2(p.ec);
+      $('k2').textContent = ck2(mn);
+      $('k3').textContent = ck2(mx);
+      $('k3').style.color = mx < mn ? 'var(--danger)' : 'var(--accent)';
+
+      $('d1').textContent = tm(p.cd);
+      $('a1').innerHTML = '<b>' + ck2(p.cua) + '</b><br>Mié 24';
+      $('d4').textContent = tm(p.cd);
+      $('a4').innerHTML = '<b>' + ck2(p.lca) + '</b><br>' + hh(p.lca).split(' · ')[0];
+
+      setCheck('c0', p.cu >= p.ec,
+        p.cu >= p.ec
+          ? 'Alcanzas este vuelo saliendo del trabajo a las 4 pm.'
+          : 'No alcanzas: llegarías al aeropuerto a las ' + ck2(p.ec) + '. Elige un vuelo más tarde.');
+
+      const rs = (T1 - 3) - p.cua;
+      setCheck('c1', rs >= 6,
+        'Aterrizan en Lima ' + ck2(p.cua) + '. Deben estar en el aeropuerto a las ' + ck2(T1 - 3) +
+        ' del jueves: les quedan ≈ ' + tm(Math.max(0, rs)) + ' (duerman en un hotel cerca del aeropuerto o cenen en Miraflores y vuelvan temprano).');
+
+      setCheck('c3', p.lc - R4 >= p.b2,
+        'Aterrizan de Panamá a las 18:00 y su vuelo a Cusco sale ' + ck2(p.lc) +
+        ': margen de ' + tm(Math.max(0, p.lc - R4)) +
+        (p.lc - R4 >= p.b2 ? ' (suficiente con maleta).' : '. Muy justo; recomendado mínimo ' + tm(p.b2) + '.'));
+
+      setCheck('c4', p.lca <= p.lim,
+        p.lca <= p.lim
+          ? 'Llegan a Cusco ' + ck2(p.lca) + ', dentro de su límite.'
+          : 'Llegan a Cusco ' + hh(p.lca) + ', pasa su límite de ' + ck2(p.lim) +
+            (mx < mn ? ' Con ese límite casi no hay ventana segura: acepten llegar más tarde o duerman en Lima y vuelen temprano el lunes.' : ''));
+
+      gantt();
+      upd();
+    }
+
+    // ============================================================
+    //  MAPA
+    // ============================================================
+    const px = p => [(p[0] + 85) * 10, (15 - p[1]) * 10];
+    const LL = { cu:[-71.97,-13.53], li:[-77.04,-12.05], pt:[-79.52,9.07], ct:[-75.5,10.4] };
+
+    const CO = [-77.4,8.7,-75.5,10.8,-74,11.1,-72,12.2,-71.3,11,-70,12,-68,10.6,-64,10.6,-62,10.7,-60,8.5,-57,6,-53,5.5,-51,4,-50,1.5,-48,-1,-44,-2.5,-40,-3,-35,-5.5,-35,-9,-38.5,-13,-39,-17,-40.5,-22,-43,-23,-46,-24,-48.5,-26,-48.7,-28.5,-51,-31,-53.5,-34,-56,-34.9,-57.5,-36,-57,-38,-62,-39,-65,-41,-64.5,-43,-67.5,-46,-66,-48,-68.5,-50.5,-69,-52.5,-68.5,-54,-72,-53.5,-75,-50,-74,-45,-73.5,-40,-73.5,-37,-72,-33,-71.5,-28,-70.3,-23,-70.2,-18.5,-72,-17,-75,-15.5,-77,-12,-79,-8,-81,-5,-80,-2.5,-80.5,0,-78.8,1.8,-77.5,4];
+
+    function buildMap() {
+      let d = 'M';
+      for (let i = 0; i < CO.length; i += 2) {
+        const p = px([CO[i], CO[i+1]]);
+        d += p[0] + ',' + p[1] + ' ';
+      }
+      const cu = px(LL.cu), li = px(LL.li), pt = px(LL.pt), ct = px(LL.ct);
+      const dx = pt[0] - li[0], dy = pt[1] - li[1];
+      const cx = (li[0] + pt[0]) / 2 + dy * 0.15, cy = (li[1] + pt[1]) / 2 - dx * 0.15;
+
+      const ln = (id, path, dash, w) =>
+        `<path id="${id}" d="${path}" stroke="var(--accent)" fill="none" stroke-dasharray="${dash}" stroke-width="${w}" opacity="0.8"/>`;
+
+      const cities = [
+        ['Cusco', cu, 9, 16],
+        ['Lima', li, -8, -9],
+        ['Panamá', pt, -9, 18],
+        ['Cartagena', ct, 10, 4]
+      ];
+
+      $('map').innerHTML =
+        `<path d="${d}Z" fill="var(--surface2)" stroke="var(--text-dim)" stroke-width="1" opacity="0.5"/>` +
+        ln('pa', `M${cu} L${li}`, '4 4', 2) +
+        ln('pb', `M${li} Q${cx},${cy} ${pt}`, '6 5', 2.5) +
+        ln('pc', `M${pt} L${ct}`, '6 5', 2.5) +
+        cities.map(c =>
+          `<circle cx="${c[1][0]}" cy="${c[1][1]}" r="6" fill="var(--accent)" stroke="#fff" stroke-width="1.5" filter="url(#glow)"/>` +
+          `<text x="${c[1][0] + c[2]}" y="${c[1][1] + c[3]}" font-size="14" fill="var(--text)" ${c[2] < 0 ? 'text-anchor="end"' : ''} font-weight="600">${c[0]}</text>`
+        ).join('') +
+        `<defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` +
+        `<g id="pn"><path d="M13 0L-9 -8L-5 0L-9 8Z" fill="var(--accent)" stroke="#fff" stroke-width="1.5"/></g>`;
+    }
+
+    // ============================================================
+    //  SEGMENTOS / TIMELINE
+    // ============================================================
+    function segs() {
+      const p = P;
+      return [
+        [0, p.cu, 'est', 'En Cusco 🏔️', 'cu'],
+        [p.cu, p.cua, 'vuelo', 'Vuelo Cusco → Lima', 'pa', 0],
+        [p.cua, T1, 'esp', 'Noche en Lima 🌙', 'li'],
+        [T1, T2, 'vuelo', 'Copa 410 · Lima → Panamá', 'pb', 0],
+        [T2, T3, 'esp', 'Conexión en Panamá', 'pt'],
+        [T3, T4, 'vuelo', 'Copa 304 · Panamá → Cartagena', 'pc', 0],
+        [T4, R1, 'des', 'En Cartagena 🏖️ ¡disfrutando!', 'ct'],
+        [R1, R2, 'vuelo', 'Copa 160 · Cartagena → Panamá', 'pc', 1],
+        [R2, R3, 'esp', 'Espera en Panamá ☕', 'pt'],
+        [R3, R4, 'vuelo', 'Copa 661 · Panamá → Lima', 'pb', 1],
+        [R4, p.lc, 'esp', 'En Lima, esperando', 'li'],
+        [p.lc, p.lca, 'vuelo', 'Vuelo Lima → Cusco', 'pa', 1],
+        [p.lca, 999, 'est', 'De vuelta en Cusco 🏔️', 'cu']
+      ];
+    }
+
+    function upd() {
+      if (!$('pa') || !P) return;
+      const h = +$('sc').value;
+      const s = segs();
+      let g = s[12];
+      for (let i = 0; i < 13; i++) {
+        if (h >= s[i][0] && h < s[i][1]) { g = s[i]; break; }
+      }
+
+      let x, y, an = -90;
+      if (g[2] === 'vuelo') {
+        const A = $(g[4]), L = A.getTotalLength();
+        const t = (h - g[0]) / ((g[1] - g[0]) || 1);
+        const u = g[5] ? 1 - t : t;
+        const a = A.getPointAtLength(L * u);
+        const b = A.getPointAtLength(L * Math.min(1, Math.max(0, u + (g[5] ? -0.02 : 0.02))));
+        x = a.x; y = a.y;
+        an = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+      } else {
+        const q = px(LL[g[4]]);
+        x = q[0]; y = q[1];
+      }
+
+      $('pn').setAttribute('transform', `translate(${x},${y}) rotate(${an}) scale(1.2)`);
+      $('st').textContent = g[3];
+      $('tm').textContent = hh(h);
+
+      const c = $('cr');
+      if (c) c.style.left = (h - 16) / 106 * 100 + '%';
+    }
+
+    // ============================================================
+    //  PLAY
+    // ============================================================
+    let timer = null;
+
+    function play() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+        $('pb').textContent = '▶ Reproducir';
+        return;
+      }
+      $('pb').textContent = '⏸ Pausa';
+      if (+$('sc').value >= 122) $('sc').value = 16;
+      timer = setInterval(() => {
+        let v = +$('sc').value + 0.4;
+        if (v >= 122) { v = 122; play(); }
+        $('sc').value = v;
+        upd();
+      }, 60);
+    }
+
+    // ============================================================
+    //  GANTT
+    // ============================================================
+    function gantt() {
+      let labels = '';
+      [16, 24, 48, 72, 96].forEach(h => {
+        labels += `<span style="left:${(h - 16) / 106 * 100}%">${hh(h).split(' · ')[0]}</span>`;
+      });
+      $('dl').innerHTML = labels;
+
+      let bars = '';
+      segs().forEach(g => {
+        const a = Math.max(g[0], 16);
+        const b = Math.min(g[1], 122);
+        if (b <= a) return;
+        const bg = g[2] === 'vuelo' ? 'linear-gradient(135deg,#455a64,#37474f)' :
+                   g[2] === 'des' ? 'linear-gradient(135deg,var(--accent),var(--accent2))' :
+                   'var(--surface2)';
+        const color = (g[2] === 'esp' || g[2] === 'est') ? 'color:var(--text-dim);' : '';
+        const label = g[2] === 'des' ? 'Cartagena' : g[2] === 'vuelo' ? '✈' : '';
+        bars += `<i title="${g[3]}" style="left:${(a - 16) / 106 * 100}%;width:${(b - a) / 106 * 100}%;background:${bg};${color}">${label}</i>`;
+      });
+      $('gt').innerHTML = bars + '<div class="current-marker" id="cr"></div>';
+    }
+
+    // ============================================================
+    //  VUELOS COPA (FIJO)
+    // ============================================================
+    const FX = [
+      ['Ida · Copa 410', 'LIM', '08:25', 'Jue 25', 'PTY', '12:16', '3 h 51 min'],
+      ['Ida · Copa 304', 'PTY', '13:25', 'Jue 25', 'CTG', '14:35', '1 h 10 min'],
+      ['Vuelta · Copa 160', 'CTG', '08:20', 'Dom 28', 'PTY', '09:38', '1 h 18 min'],
+      ['Vuelta · Copa 661', 'PTY', '14:21', 'Dom 28', 'LIM', '18:00', '3 h 39 min']
+    ];
+
+    const FC = [
+      '<div class="check warn"><span class="check-icon">⚠️</span><span>Conexión en Panamá de 1 h 09 min: es ajustada, pero está en el mismo boleto, así que si hay retraso Copa los reubica.</span></div>',
+      '<div class="check ok"><span class="check-icon">🎉</span><span>Llegan a Cartagena el jueves 14:35 y salen el domingo 08:20: 3 noches y solo 2 días completos (viernes y sábado).</span></div>',
+      '<div class="check"><span class="check-icon">☕</span><span>Espera de 4 h 43 min en Panamá: coman y descansen en el aeropuerto.</span></div>'
+    ];
+
+    function fi() {
+      $('fi').innerHTML = FX.map((f, i) =>
+        `<div class="ticket">
+          <div class="tp">${f[0]} · ${f[3]}</div>
+          <div class="route">
+            <div><b>${f[1]}</b>${f[2]}</div>
+            <div class="arrow">✈<small>${f[6]}</small></div>
+            <div><b>${f[4]}</b>${f[5]}</div>
+          </div>
+        </div>${FC[i] || ''}`
+      ).join('');
+    }
+
+    // ============================================================
+    //  CALENDARIO
+    // ============================================================
+    function month() {
+      let s = 'LMMJVSD'.split('').map(x => `<div class="hd">${x}</div>`).join('');
+      for (let d = 1; d <= 31; d++) {
+        const cls = (d >= 24 && d <= 28 ? 'trip ' : '') + (d === 25 || d === 26 ? 'holiday' : '');
+        s += `<div class="${cls}">${d}${d === 28 ? '🐣' : ''}</div>`;
+      }
+      $('mo').innerHTML = s;
+    }
+
+    // ============================================================
+    //  LINKS
+    // ============================================================
+    const gm = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+    const gs = q => 'https://www.google.com/search?q=' + encodeURIComponent(q);
+
+    const AB = 'https://www.airbnb.com/s/Cartagena--Colombia/homes?checkin=2027-03-24&checkout=2027-03-28&adults=2';
+    const BK = 'https://www.booking.com/searchresults.html?ss=Cartagena%20Colombia&checkin=2027-03-24&checkout=2027-03-28&group_adults=2';
+
+    // ============================================================
+    //  ESTILOS / TIERS
+    // ============================================================
+    const TI = [
+      {
+        n: '💸 Económico',
+        num: [55, 20, 55, 25],
+        lo: [
+          ['Hostel con habitación privada en Getsemaní', 'Media Luna, Mamallena o Viajero: ambiente joven, a pie del centro.', 'US$45–70/noche', gm('Media Luna Hostel Cartagena')],
+          ['Airbnb: habitación o estudio sencillo', 'Busca Getsemaní, con aire acondicionado y buenas reseñas.', 'US$40–65/noche', AB]
+        ],
+        to: [
+          ['Playa Blanca en lancha compartida', 'Día de playa en Barú; llevan efectivo para sillas y comida.', 'US$30–45 p/p', gs('tour Playa Blanca desde Cartagena lancha precio')],
+          ['Volcán del Totumo', 'Baño de lodo, medio día, tour compartido.', 'US$20–30 p/p', gs('tour Volcán del Totumo desde Cartagena precio')],
+          ['Free walking tour del Centro', 'Se paga con propina; buen primer paseo.', 'Propina', gs('free walking tour Cartagena centro amurallado')]
+        ],
+        co: [
+          ['Plaza de la Trinidad', 'Comida callejera de noche, barata y con ambiente.', '', gm('Plaza de la Trinidad Cartagena')],
+          ['Mercado de Bazurto', 'Auténtico y económico; vayan temprano.', '', gm('Mercado de Bazurto Cartagena')],
+          ['Cocina de Pepina', 'Comida típica en Getsemaní.', '', gm('Cocina de Pepina Cartagena')]
+        ]
+      },
+      {
+        n: '⭐ Regular',
+        num: [110, 38, 110, 40],
+        lo: [
+          ['Airbnb: apartamento de 1 habitación', 'Getsemaní o Centro, con cocina y aire acondicionado.', 'US$90–140/noche', AB],
+          ['Hotel boutique 3–4★', 'Por ejemplo Movich Cartagena de Indias; revisa precio de Semana Santa.', 'US$110–190/noche', gm('Movich Hotel Cartagena de Indias')]
+        ],
+        to: [
+          ['Catamarán a Islas del Rosario con almuerzo', 'Snorkel y playa; en listas de agencias ronda 258–272 mil COP por adulto (otra temporada).', '≈ US$65–70 p/p', 'https://www.civitatis.com/es/cartagena-de-indias/excursion-islas-rosario/'],
+          ['Atardecer en la bahía', 'Paseo en velero o catamarán con bebidas.', 'US$25–40 p/p', gs('paseo atardecer bahía Cartagena velero precio')],
+          ['Castillo San Felipe con guía', 'Fortaleza clave de la ciudad; vayan temprano por el calor.', 'US$20–35 p/p', gm('Castillo San Felipe de Barajas')]
+        ],
+        co: [
+          ['La Cevichería', 'Ceviches famosos; algo caro y con fila.', '', gm('La Cevichería Cartagena')],
+          ['Café del Mar', 'Atardecer sobre la muralla.', '', gm('Café del Mar Cartagena')],
+          ['Alquímico', 'Bar de cócteles muy conocido, ideal en pareja.', '', gm('Alquímico Cartagena')]
+        ]
+      },
+      {
+        n: '💎 Premium',
+        num: [330, 85, 230, 80],
+        lo: [
+          ['Hotel de lujo en el Centro Histórico', 'Casa San Agustín, Sofitel Legend Santa Clara o Charleston Santa Teresa (ex conventos y casonas).', 'US$250–450+/noche', gm('Sofitel Legend Santa Clara Cartagena')],
+          ['Airbnb: casa colonial completa', 'Con terraza o piscina; pidan fotos y reseñas recientes.', 'US$300+/noche', AB]
+        ],
+        to: [
+          ['Lancha o catamarán privado', 'Islas del Rosario o Barú solo para ustedes (precio por embarcación, a cotizar).', '≈ US$500–1,000 total', gs('alquiler lancha privada Islas del Rosario Cartagena')],
+          ['Beach club en las islas', 'Día en club con servicio; en tours tipo lancha deportiva parte desde unos US$95 p/p.', 'US$95+ p/p', 'https://pelago.com/en/activity/pxgtt14j2-full-day-rosario-islands-including-baru-cholon-and-playa-blanca-cartagena'],
+          ['Paseo privado en coche por el Centro', 'Con Castillo San Felipe; en una lista de agencia, 110–188 mil COP p/p por 30–60 min.', '≈ US$30–50 p/p', gs('tour privado coche caballos Cartagena centro histórico')]
+        ],
+        co: [
+          ['Cena en restaurante de autor', 'Busquen alta cocina en el Centro Histórico y reserven con tiempo.', '', gm('restaurantes alta cocina Centro Histórico Cartagena')],
+          ['Cócteles en Alquímico', 'Para después de la cena.', '', gm('Alquímico Cartagena')],
+          ['Café del Mar', 'Atardecer sobre la muralla, mesa reservada.', '', gm('Café del Mar Cartagena')]
+        ]
+      }
+    ];
+
+    let ti = 1;
+
+    function item(r) {
+      return `<div class="item">
+        <span class="price">${r[2]}</span>
+        <a target="_blank" rel="noopener" href="${r[3]}">${r[0]} ↗</a>
+        <br><span class="note">${r[1]}</span>
+      </div>`;
+    }
+
+    function tiers() {
+      $('tier').innerHTML = TI.map((t, i) =>
+        `<button class="${i === ti ? 'on' : ''}" onclick="ti=${i};tiers();bud()">${t.n}</button>`
+      ).join('');
+
+      const t = TI[ti];
+      $('tp').innerHTML = `
+        <div class="card" style="grid-column:1/-1">
+          <h3>🌙 Miércoles en Lima (vuelo a las 08:25)</h3>
+          ${item(['Hotel cerca del aeropuerto Jorge Chávez', 'Duermen pocas horas y llegan al check-in sin apuro.', 'US$50–120', gm('hotel cerca aeropuerto Jorge Chávez Lima')])}
+          ${item(['Cena en Miraflores o Barranco', 'Si prefieren pasear, vuelvan al aeropuerto antes de las 05:25.', '', gm('restaurantes Miraflores Lima')])}
+        </div>
+        <div class="card">
+          <h3>🛏️ Dónde dormir en Cartagena</h3>
+          ${t.lo.map(item).join('')}
+          <div class="note" style="margin-top:8px;">Más opciones: <a target="_blank" rel="noopener" href="${BK}">Booking</a> · <a target="_blank" rel="noopener" href="${AB}">Airbnb</a></div>
+        </div>
+        <div class="card">
+          <h3>🏝️ Tours y actividades</h3>
+          ${t.to.map(item).join('')}
+        </div>
+        <div class="card" style="grid-column:1/-1">
+          <h3>🍽️ Dónde comer</h3>
+          ${t.co.map(item).join('')}
+        </div>
+      `;
+    }
+
+    // ============================================================
+    //  COSTO
+    // ============================================================
+    function bud() {
+      const t = TI[ti];
+      const L = [
+        'Alojamiento en Cartagena (US$/noche)',
+        'Comida por persona y día (US$)',
+        'Tours por persona (US$)',
+        'Transporte local total (US$)'
+      ];
+      let html = '';
+      L.forEach((label, i) => {
+        html += `<tr>
+          <td>${label}</td>
+          <td><input type="number" value="${t.num[i]}" oninput="TI[ti].num[${i}]=+this.value;tot()"></td>
+        </tr>`;
+      });
+      $('bt').innerHTML = html;
+      tot();
+    }
+
+    function tot() {
+      const t = TI[ti].num;
+      const fx = +$('fx').value;
+      const n = +$('nn').value;
+      const s = (t[0] * n + t[1] * (n + 1) * 2 + t[2] * 2 + t[3] + +$('hl').value) * fx + (+$('cl').value) * 2;
+      $('tot').innerHTML = `${TI[ti].n}: ≈ S/ ${Math.round(s).toLocaleString('es-PE')}
+        <div class="per-person">≈ S/ ${Math.round(s / 2).toLocaleString('es-PE')} por persona</div>`;
+    }
+
+    // ============================================================
+    //  ITINERARIO
+    // ============================================================
+    const DAYS = [
+      ['Mié 24', [
+        ['18:30', 'Vuelo Cusco → Lima (el que elijan).'],
+        ['Noche', 'Cena en Miraflores o descanso en un hotel cerca del aeropuerto.'],
+        ['Dormir', 'Pongan alarma para ~04:15: deben estar en el aeropuerto a las 05:25.']
+      ]],
+      ['Jue 25', [
+        ['05:25', 'Check-in de Copa 410 (3 h antes). Vuelo 08:25 a Panamá.'],
+        ['13:25', 'Conexión a Cartagena; llegan 14:35.'],
+        ['15:45', 'Taxi al alojamiento y check-in en Getsemaní (≈ 20 000 COP desde el aeropuerto).'],
+        ['17:00', 'Paseo por el Centro Amurallado: Torre del Reloj y Plaza de Santo Domingo.'],
+        ['Atardecer', 'Murallas o Café del Mar.'],
+        ['Noche', 'Cena en Getsemaní y Plaza de la Trinidad.']
+      ]],
+      ['Vie 26', [
+        ['8:00', 'Tour a Islas del Rosario o Playa Blanca (reserven antes: Viernes Santo es temporada alta).'],
+        ['Día', 'Snorkel, playa y almuerzo en la isla.'],
+        ['17:00', 'Regresan; quizá vean procesiones del Viernes Santo en el centro.'],
+        ['Noche', 'Cena tranquila: mañana también hay plan.']
+      ]],
+      ['Sáb 27', [
+        ['8:30', 'Castillo San Felipe de Barajas (vayan temprano, hace calor).'],
+        ['Mediodía', 'Descanso o piscina.'],
+        ['Tarde', 'Getsemaní: murales, artesanías y compras.'],
+        ['Atardecer', 'Paseo en velero o cena especial de despedida.'],
+        ['Noche', 'Acuéstense temprano: se levantan a las 4.']
+      ]],
+      ['Dom 28', [
+        ['04:30', 'Taxi al aeropuerto de Cartagena; llegan 05:20.'],
+        ['08:20', 'Copa 160 a Panamá (llegan 09:38).'],
+        ['14:21', 'Copa 661 a Lima; llegan 18:00.'],
+        ['~20:45', 'Vuelo Lima → Cusco, con margen de ≥ 2 h 30 min tras aterrizar.']
+      ]]
+    ];
+
+    let di = 1;
+
+    function itin() {
+      $('tabs').innerHTML = DAYS.map((d, i) =>
+        `<button class="${i === di ? 'on' : ''}" onclick="di=${i};itin()">${d[0]}</button>`
+      ).join('');
+
+      $('it').innerHTML = DAYS[di][1].map(s =>
+        `<div class="schedule-item">
+          <span class="time">${s[0]}</span>
+          <span>${s[1]}</span>
+        </div>`
+      ).join('');
+    }
+
+    // ============================================================
+    //  CHECKLIST
+    // ============================================================
+    const CK = [
+      ['Hoy', 'Guardar el voucher de Copa en el celular y en papel'],
+      ['27 nov – 1 dic', 'Comprar Cusco–Lima (mié 24) y Lima–Cusco (dom 28) con las horas de la simulación'],
+      ['Dic – ene', 'Reservar hotel en Lima (miércoles) y alojamiento en Cartagena (jue, vie, sáb)'],
+      ['Feb', 'Reservar tour de islas; consultar sobre la vacuna de fiebre amarilla'],
+      ['Mar 21–23', 'Check-Mig de los dos y seguro de viaje; pesos colombianos en efectivo'],
+      ['Mié 24 mar', 'Web check-in de Copa 410 (normalmente abre 24 h antes; confirma en Copa)'],
+      ['Jue 25 mar', 'Estar en el aeropuerto de Lima a las 05:25']
+    ];
+
+    function ck() {
+      let st = {};
+      try { st = JSON.parse(localStorage.getItem('ck27') || '{}'); } catch (e) {}
+      $('ck').innerHTML = CK.map((c, i) =>
+        `<label class="${st[i] ? 'done' : ''}">
+          <input type="checkbox" ${st[i] ? 'checked' : ''} onchange="sv(${i},this.checked);this.parentElement.classList.toggle('done')">
+          <span><b>${c[0]}</b> · ${c[1]}</span>
+        </label>`
+      ).join('');
+    }
+
+    function sv(i, v) {
+      try {
+        const st = JSON.parse(localStorage.getItem('ck27') || '{}');
+        st[i] = v;
+        localStorage.setItem('ck27', JSON.stringify(st));
+      } catch (e) {}
+    }
+
+    // ============================================================
+    //  CYBER
+    // ============================================================
+    const CY = [
+      ['2026-11-24', 'Último día para canjear puntos CMR'],
+      ['2026-11-27', 'Black Friday (referencia)'],
+      ['2026-11-30', 'Cyber Monday (referencia)'],
+      ['2026-12-01', 'Travel Tuesday (sin confirmar)']
+    ];
+
+    function cy() {
+      const n = new Date();
+      const t = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+      $('cy').innerHTML = CY.map(c => {
+        const p = c[0].split('-');
+        const k = Math.round((new Date(+p[0], +p[1] - 1, +p[2]) - t) / 864e5);
+        const label = k < 0 ? 'ya pasó' : k === 0 ? '¡hoy!' : 'en ' + k + ' d';
+        return `<div class="field ${k < 0 ? 'past' : ''}">
+          <span>${c[1]}</span><b style="color:${k < 0 ? 'var(--text-dim)' : 'var(--accent)'}">${label}</b>
+        </div>`;
+      }).join('');
+
+      const g = (a, b, d) => 'https://www.google.com/travel/flights?q=' + encodeURIComponent('Flights from ' + a + ' to ' + b + ' on ' + d);
+      $('f1').href = g('CUZ', 'LIM', '2027-03-24');
+      $('f2').href = g('LIM', 'CUZ', '2027-03-28');
+      $('f3').href = g('LIM', 'CTG', '2027-03-25');
+    }
+
+    // ============================================================
+    //  NAV SCROLL SPY
+    // ============================================================
+    function scrollSpy() {
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('nav a');
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(sec => {
+          const top = sec.offsetTop - 100;
+          if (window.scrollY >= top) current = sec.id;
+        });
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+        });
+      }, { passive: true });
+    }
+
+    // ============================================================
+    //  INIT
+    // ============================================================
+    buildMap();
+    month();
+    fi();
+    itin();
+    tiers();
+    bud();
+    ck();
+    cy();
+    go();
+    scrollSpy();
+  </script>
+</body>
+</html>
